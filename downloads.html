@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina Downloads</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="downloads.css" />
+</head>
+
+<body>
+
+  <div class="downloads-page">
+
+    <!-- NAVBAR -->
+    <nav class="downloads-nav">
+      <div class="nav-left">
+        <div class="logo-icon">⬇</div>
+        <div>
+          <h2>Lumina Downloads</h2>
+          <p>Manage your generated images and audio files</p>
+        </div>
+      </div>
+
+      <a href="home.html" class="back-btn">← Back Home</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="downloads-hero">
+      <span>DOWNLOAD CENTER</span>
+      <h1>Your Creative Library</h1>
+      <p>Access, download, search, and manage all files created inside Lumina.</p>
+    </section>
+
+    <!-- SEARCH + TABS -->
+    <section class="downloads-controls">
+      <input 
+        type="text" 
+        id="downloadsSearch" 
+        placeholder="Search downloads..."
+        oninput="filterDownloads()"
+      />
+
+      <div class="download-tabs">
+        <button class="active" id="imagesTab" onclick="showSection('images')">
+          🖼 Images
+        </button>
+
+        <button id="audioTab" onclick="showSection('audio')">
+          🎙 Audio
+        </button>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="downloads-stats">
+      <div class="stat-card">
+        <h3 id="imageCount">0</h3>
+        <p>Images</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="audioCount">0</h3>
+        <p>Audio Files</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="totalCount">0</h3>
+        <p>Total Downloads</p>
+      </div>
+    </section>
+
+    <!-- IMAGE SECTION -->
+    <section class="downloads-section" id="imagesSection">
+      <div class="section-header">
+        <div>
+          <h2>Generated Images</h2>
+          <p>Images created using Lumina Image Studio</p>
+        </div>
+
+        <button class="danger-btn" onclick="deleteAllImages()">
+          Delete All Images
+        </button>
+      </div>
+
+      <div class="downloads-grid" id="imagesGrid">
+        <div class="empty-state">Loading images...</div>
+      </div>
+    </section>
+
+    <!-- AUDIO SECTION -->
+    <section class="downloads-section hidden" id="audioSection">
+      <div class="section-header">
+        <div>
+          <h2>Generated Audio</h2>
+          <p>Voice files created using Lumina Voice Studio</p>
+        </div>
+
+        <button class="danger-btn" onclick="deleteAllAudio()">
+          Delete All Audio
+        </button>
+      </div>
+
+      <div class="downloads-grid" id="audioGrid">
+        <div class="empty-state">Loading audio...</div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="downloads.js"></script>
+</body>
+</html>

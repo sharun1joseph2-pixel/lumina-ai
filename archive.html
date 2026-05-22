@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina Archived Chats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+
+  <link rel="stylesheet" href="archive.css">
+</head>
+
+<body>
+
+<div class="archive-page">
+
+  <nav class="archive-nav">
+    <div class="logo">✦ LUMINA ARCHIVE</div>
+
+    <a href="home.html" class="back-btn">← Back Home</a>
+  </nav>
+
+  <section class="archive-hero">
+    <span class="badge">CHAT ARCHIVE</span>
+
+    <h1>ARCHIVED CHATS</h1>
+
+    <p>
+      Restore, open, or permanently delete your archived conversations.
+    </p>
+  </section>
+
+  <section class="archive-container">
+
+    <div class="archive-toolbar">
+      <input 
+        type="text"
+        id="archiveSearch"
+        placeholder="Search archived chats..."
+        oninput="searchArchivedChats()"
+        autocomplete="off"
+      >
+
+      <button onclick="loadArchivedChats()">
+        Refresh
+      </button>
+    </div>
+
+    <div id="archivedChatList" class="archived-chat-list">
+      <p>Loading archived chats...</p>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+function getUserId() {
+  return localStorage.getItem("user_id");
+}
+
+async function loadArchivedChats() {
+  const user_id = getUserId();
+  const list = document.getElementById("archivedChatList");
+
+  if (!user_id) {
+    window.location.href = "auth.html";
+    return;
+  }
+
+  list.innerHTML = "<p>Loading archived chats...</p>";
+
+  try {
+    const res = await fetch(`${API}/archived-chats/${user_id}`);
+    const data = await res.json();
+
+    list.innerHTML = "";
+
+    if (!data || data.length === 0) {
+      list.innerHTML = `
+        <div class="empty-box">
+          <h2>No archived chats</h2>
+          <p>Your archived conversations will appear here.</p>
+        </div>
+      `;
+      return;
+    }
+
+    data.forEach(chat => {
+      const card = document.createElement("div");
+      card.className = "archive-card";
+
+      card.innerHTML = `
+        <div class="archive-info">
+          <h3>${chat.title || "Untitled Chat"}</h3>
+          <p>Archived conversation</p>
+        </div>
+
+        <div class="archive-actions">
+          <button onclick="openArchivedChat('${chat._id}')">
+            Open
+          </button>
+
+          <button onclick="restoreChat('${chat._id}')">
+            Restore
+          </button>
+
+          <button class="danger" onclick="deleteArchivedChat('${chat._id}')">
+            Delete
+          </button>
+        </div>
+      `;
+
+      list.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    list.innerHTML = `
+      <div class="empty-box">
+        <h2>Could not load archive</h2>
+        <p>Please try again.</p>
+      </div>
+    `;
+  }
+}
+
+function openArchivedChat(chatId) {
+  localStorage.setItem("open_archived_chat", chatId);
+  window.location.href = "index.html";
+}
+
+async function restoreChat(chatId) {
+  await fetch(`${API}/unarchive-chat/${chatId}`, {
+    method: "PUT"
+  });
+
+  loadArchivedChats();
+}
+
+async function deleteArchivedChat(chatId) {
+  const confirmDelete = confirm("Delete this archived chat permanently?");
+
+  if (!confirmDelete) return;
+
+  await fetch(`${API}/delete-chat/${chatId}`, {
+    method: "DELETE"
+  });
+
+  loadArchivedChats();
+}
+
+function searchArchivedChats() {
+  const query = document.getElementById("archiveSearch").value.toLowerCase();
+  const cards = document.querySelectorAll(".archive-card");
+
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+
+    if (text.includes(query)) {
+      card.style.display = "flex";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+window.onload = function () {
+  applyLuminaTheme();
+  loadArchivedChats();
+};
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+
+  if (!container) {
+    console.log(message);
+    return;
+  }
+
+  const toast = document.createElement("div");
+
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+function setButtonLoading(button, isLoading, loadingText = "Loading...") {
+  if (!button) return;
+
+  if (isLoading) {
+    button.dataset.originalText = button.innerHTML;
+    button.innerHTML = loadingText;
+    button.disabled = true;
+    button.classList.add("loading-btn");
+  } else {
+    button.innerHTML = button.dataset.originalText || button.innerHTML;
+    button.disabled = false;
+    button.classList.remove("loading-btn");
+  }
+}
+function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme");
+  document.body.classList.remove("dark-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.add("dark-theme");
+  }
+}
+</script>
+<div id="toastContainer" class="toast-container"></div>
+</body>
+</html>

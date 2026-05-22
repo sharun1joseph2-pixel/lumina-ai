@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina AI - Your Creative AI Suite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="landing.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="landing-nav">
+    <div class="brand" onclick="window.location.href='landing.html'">
+      <div class="brand-icon brand-logo">
+  <img src="assets/crop.png" alt="Lumina AI Logo">
+</div>
+<h2>Lumina AI</h2>
+    </div>
+
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#tools">AI Tools</a>
+      <a href="#showcase">Showcase</a>
+      <a href="#why">Why Lumina</a>
+    </div>
+
+    <div class="nav-actions" id="landingNavActions">
+      <a href="auth.html" class="login-btn">Login</a>
+      <a href="auth.html" class="signup-btn">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-section">
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        ✨ Your AI Creative Suite
+      </div>
+
+      <h1>
+        Create, Chat, Imagine, and Speak with Lumina AI
+      </h1>
+
+      <p>
+        Lumina AI brings chatbot intelligence, image generation, document analysis,
+        voice creation, notes, downloads, and creative tools into one powerful workspace.
+      </p>
+
+      <div class="hero-actions" id="landingHeroActions">
+        <a href="auth.html" class="primary-cta">
+          Get Started Free →
+        </a>
+
+        <button type="button" class="secondary-cta" onclick="continueAsGuest()">
+          Continue as Guest
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div onclick="openLandingTool('chat')">
+          <h3>AI Chat</h3>
+          <p>Ask anything</p>
+        </div>
+
+        <div onclick="openLandingTool('image')">
+          <h3>Image Studio</h3>
+          <p>Create visuals</p>
+        </div>
+
+        <div onclick="openLandingTool('voice')">
+          <h3>Voice Studio</h3>
+          <p>Generate audio</p>
+        </div>
+      </div>
+    </div>
+        <div class="hero-preview">
+      <div class="preview-card main-preview">
+        <div class="preview-top">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="chat-demo">
+          <div class="user-bubble">
+            Explain artificial intelligence in simple words.
+          </div>
+
+          <div class="ai-bubble">
+            <strong>AI means machines that can think, learn, and help humans.</strong>
+            <br />
+            It can answer questions, create images, analyze documents, and automate work.
+          </div>
+        </div>
+      </div>
+
+      <div class="floating-card hero-image-card" onclick="openLandingTool('image')">
+  🖼
+  <span>AI Images</span>
+</div>
+
+<div class="floating-card hero-voice-card" onclick="openLandingTool('voice')">
+  🎙
+  <span>Voice Studio</span>
+</div>
+
+<div class="floating-card hero-docs-card" onclick="openLandingTool('documents')">
+  📄
+  <span>File Analysis</span>
+</div>
+    </div>
+
+  </section>
+
+  <!-- TOOLS SECTION -->
+  <section class="tools-section" id="tools">
+    <h2>Explore Lumina’s AI Tools</h2>
+
+    <p class="section-subtitle">
+      Everything you need for learning, creativity, productivity, and experimentation.
+    </p>
+
+    <div class="tool-tabs">
+      <button type="button" class="active" onclick="openLandingTool('home')">
+        Try it now
+      </button>
+
+      <button type="button" onclick="openLandingTool('chat')">
+        Chatbot
+      </button>
+
+      <button type="button" onclick="openLandingTool('image')">
+        Image AI
+      </button>
+
+      <button type="button" onclick="openLandingTool('voice')">
+        Voice
+      </button>
+
+      <button type="button" onclick="openLandingTool('documents')">
+        Documents
+      </button>
+
+      <button type="button" onclick="openLandingTool('notes')">
+        Notes
+      </button>
+    </div>
+  </section>
+    <!-- FEATURES -->
+  <section class="features-grid" id="features">
+
+  <!-- CHATBOT -->
+  <div class="ai-tool-card" onclick="openLandingTool('chat')">
+    <div class="tool-card-top">
+      <div class="feature-icon">💬</div>
+      <span class="tool-tag">AI CHAT</span>
+    </div>
+
+    <h3>Chat with Intelligence</h3>
+    <p>
+      Ask questions, understand topics, write code, create tables,
+      generate flowcharts, and get structured answers in seconds.
+    </p>
+
+    <div class="card-preview chat-preview">
+      <div class="mini-user">Create a table comparing DBMS and File System.</div>
+      <div class="mini-ai">Here is a clean comparison table...</div>
+    </div>
+
+    <button class="tool-open-btn">Open Chatbot →</button>
+  </div>
+
+  <!-- IMAGE -->
+  <div class="ai-tool-card" onclick="openLandingTool('image')">
+    <div class="tool-card-top">
+      <div class="feature-icon">🖼</div>
+      <span class="tool-tag">IMAGE AI</span>
+    </div>
+
+    <h3>AI Image Studio</h3>
+    <p>
+      Generate creative images from prompts and use reference images
+      for more guided outputs.
+    </p>
+
+    <div class="image-studio-scroll-preview">
+  <div class="image-scroll-track">
+    <div class="ai-preview-photo img-art-1"></div>
+    <div class="ai-preview-photo img-art-2"></div>
+    <div class="ai-preview-photo img-art-3"></div>
+    <div class="ai-preview-photo img-art-4"></div>
+    <div class="ai-preview-photo img-art-5"></div>
+
+    <!-- duplicate for smooth infinite loop -->
+    <div class="ai-preview-photo img-art-1"></div>
+    <div class="ai-preview-photo img-art-2"></div>
+    <div class="ai-preview-photo img-art-3"></div>
+    <div class="ai-preview-photo img-art-4"></div>
+    <div class="ai-preview-photo img-art-5"></div>
+  </div>
+</div>
+
+    <button class="tool-open-btn">Open Image Studio →</button>
+  </div>
+
+  <!-- VOICE -->
+  <div class="ai-tool-card" onclick="openLandingTool('voice')">
+    <div class="tool-card-top">
+      <div class="feature-icon">🎙</div>
+      <span class="tool-tag">VOICE AI</span>
+    </div>
+
+    <h3>Voice Studio</h3>
+    <p>
+      Convert text into natural downloadable audio using multiple
+      voices and styles.
+    </p>
+
+    <div class="card-preview audio-preview-card">
+      <div class="audio-play">▶</div>
+
+      <div class="wave">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="audio-time">00:18</div>
+    </div>
+
+    <button class="tool-open-btn">Open Voice Studio →</button>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="ai-tool-card" onclick="openLandingTool('documents')">
+    <div class="tool-card-top">
+      <div class="feature-icon">📄</div>
+      <span class="tool-tag">DOCUMENT AI</span>
+    </div>
+
+    <h3>Document Analysis</h3>
+    <p>
+      Upload PDFs, DOCX files, or text files and let Lumina explain,
+      summarize, extract key points, and create questions.
+    </p>
+
+    <div class="card-preview doc-preview">
+      <div class="doc-mini-item">
+        <strong>Summary</strong>
+        <span>Quick structured overview</span>
+      </div>
+
+      <div class="doc-mini-item">
+        <strong>Simple Explanation</strong>
+        <span>Easy language for students</span>
+      </div>
+
+      <div class="doc-mini-item">
+        <strong>Q&A Generation</strong>
+        <span>Important questions from notes</span>
+      </div>
+    </div>
+
+    <button class="tool-open-btn">Open Document Studio →</button>
+  </div>
+
+  <!-- NOTES -->
+  <div class="ai-tool-card" onclick="openLandingTool('notes')">
+    <div class="tool-card-top">
+      <div class="feature-icon">⭐</div>
+      <span class="tool-tag">SAVED NOTES</span>
+    </div>
+
+    <h3>Saved Notes</h3>
+    <p>
+      Save important AI responses, study material, code explanations,
+      and image prompts for later use.
+    </p>
+
+    <div class="card-preview notes-preview">
+      <div class="note-chip">DBMS Notes</div>
+      <div class="note-chip">Java Viva</div>
+      <div class="note-chip">AI Prompt Ideas</div>
+      <div class="note-chip">Study Summary</div>
+    </div>
+
+    <button class="tool-open-btn">Open Notes →</button>
+  </div>
+
+  <!-- DOWNLOADS -->
+  <div class="ai-tool-card" onclick="openLandingTool('downloads')">
+    <div class="tool-card-top">
+      <div class="feature-icon">⬇</div>
+      <span class="tool-tag">DOWNLOADS</span>
+    </div>
+
+    <h3>Downloads Center</h3>
+    <p>
+      Access generated images, audio files, exported chats, and saved
+      creative assets from one place.
+    </p>
+
+    <div class="card-preview downloads-preview">
+      <div class="download-row">
+        <span>🖼 image-output.png</span>
+        <small>Ready</small>
+      </div>
+
+      <div class="download-row">
+        <span>🎵 audio-voice.mp3</span>
+        <small>Saved</small>
+      </div>
+
+      <div class="download-row">
+        <span>📄 chat-export.pdf</span>
+        <small>Done</small>
+      </div>
+    </div>
+
+    <button class="tool-open-btn">Open Downloads →</button>
+  </div>
+
+</section>
+
+    <!-- SHOWCASE -->
+ <section class="showcase-section" id="showcase">
+  <div class="section-badge">DESIGN SHOWCASE</div>
+  <h2>Built for Students, Creators, and Developers</h2>
+  <p>
+    Lumina is designed as a complete AI workspace where users can learn,
+    create, analyze, and build faster.
+  </p>
+
+  <div class="showcase-grid">
+
+    <!-- BOX 1 -->
+    <div class="showcase-card poster-card">
+      <div class="showcase-overlay"></div>
+
+      <div class="poster-animated-gallery">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600" class="floating-photo photo-1" alt="AI art">
+        <img src="https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=600" class="floating-photo photo-2" alt="AI art">
+        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600" class="floating-photo photo-3" alt="AI art">
+        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600" class="floating-photo photo-4" alt="AI art">
+        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600" class="floating-photo photo-5" alt="AI art">
+      </div>
+
+      <div class="showcase-content">
+        <span class="mini-badge">Creative Poster</span>
+        <h3>Future AI Assistant</h3>
+        <p>Cyberpunk visuals, neon lighting, cinematic style.</p>
+      </div>
+    </div>
+
+    <!-- BOX 2 -->
+    <div class="showcase-card notes-card">
+      <div class="showcase-overlay"></div>
+
+      <div class="notes-preview-card">
+        <div class="notes-header-row">
+          <span class="notes-dot blue"></span>
+          <span class="notes-dot purple"></span>
+          <span class="notes-dot pink"></span>
+        </div>
+
+        <div class="notes-title">Lumina Study Notes</div>
+
+        <div class="notes-line long"></div>
+        <div class="notes-line medium"></div>
+        <div class="notes-line short"></div>
+        <div class="notes-line medium"></div>
+
+        <div class="notes-chip-row">
+          <span class="notes-chip">Summary</span>
+          <span class="notes-chip">Key Points</span>
+          <span class="notes-chip">Q&A</span>
+        </div>
+
+        <div class="notes-mini-card">
+          <strong>Topic:</strong> DBMS Basics
+          <p>Structured AI notes saved and ready for revision.</p>
+        </div>
+      </div>
+
+      <div class="showcase-content">
+        <span class="mini-badge">Study Mode</span>
+        <h3>Clean Notes</h3>
+        <p>Save structured answers and download them later.</p>
+      </div>
+    </div>
+
+ <!-- BOX 3: TEXT TO SPEECH -->
+    <div class="showcase-card voice-card">
+
+      <div class="voice-preview-card">
+
+        <div class="voice-top-row">
+          <div class="voice-play-btn">▶</div>
+          <div class="voice-time">00:18</div>
+        </div>
+
+        <div class="voice-wave">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="voice-chips">
+          <span>Aria</span>
+          <span>Liam</span>
+          <span>Nova</span>
+        </div>
+
+      </div>
+
+      <div class="showcase-content">
+        <span class="mini-badge">Voice Output</span>
+
+        <h3>Text to Speech</h3>
+
+        <p>
+          Turn written answers into natural audio.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+  <!-- WHY LUMINA -->
+  <section class="why-section" id="why">
+
+    <div class="why-left">
+      <span>WHY LUMINA?</span>
+
+      <h2>One AI workspace instead of many separate tools.</h2>
+
+      <p>
+        Lumina combines the most useful AI features into a single smooth interface.
+        It is ideal for students, developers, creators, and anyone who wants a simple
+        but powerful AI assistant.
+      </p>
+    </div>
+
+    <div class="why-list">
+      <div>
+        <strong>⚡ Fast answers</strong>
+        <p>Get structured and readable responses.</p>
+      </div>
+
+      <div>
+        <strong>🎨 Creative tools</strong>
+        <p>Create image prompts, generate visuals, and save outputs.</p>
+      </div>
+
+      <div>
+        <strong>📚 Study friendly</strong>
+        <p>Save notes, export chats, and organize learning material.</p>
+      </div>
+
+      <div>
+        <strong>🔐 Account control</strong>
+        <p>Login to unlock history, image generation, voice tools, and saved notes.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <h2>Start creating with Lumina AI today</h2>
+
+    <p>
+      Use guest mode for quick chat, or sign up to unlock the full AI workspace.
+    </p>
+
+    <div class="final-actions" id="landingFinalActions">
+      <a href="auth.html" class="primary-cta">
+        Login / Sign Up
+      </a>
+
+      <button type="button" class="secondary-cta" onclick="continueAsGuest()">
+        Try Guest Mode
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Lumina AI. Built for learning, creativity, and productivity.</p>
+  </footer>
+
+  <!-- TOAST -->
+  <div id="toastContainer" class="toast-container"></div>
+    <script>
+    function getLandingUserId() {
+      return localStorage.getItem("user_id");
+    }
+
+    function isLoggedInUser() {
+      const userId = localStorage.getItem("user_id");
+      const isGuest = localStorage.getItem("guest_mode") === "true";
+
+      return Boolean(userId && !isGuest && !userId.startsWith("guest_"));
+    }
+
+    function isGuestUser() {
+      const userId = localStorage.getItem("user_id") || "";
+      const guestMode = localStorage.getItem("guest_mode") === "true";
+
+      return guestMode || userId.startsWith("guest_");
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showLandingToast(message, type = "info") {
+      let container = document.getElementById("toastContainer");
+
+      if (!container) {
+        container = document.createElement("div");
+        container.id = "toastContainer";
+        container.className = "toast-container";
+        document.body.appendChild(container);
+      }
+
+      const toast = document.createElement("div");
+      toast.className = `landing-toast ${type}`;
+      toast.textContent = message;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add("show");
+      }, 20);
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+          toast.remove();
+        }, 260);
+      }, 3200);
+    }
+
+    function continueAsGuest() {
+      localStorage.setItem("guest_mode", "true");
+      localStorage.setItem("user_id", "guest_" + Date.now());
+      localStorage.setItem("full_name", "Guest User");
+      localStorage.setItem("username", "guest");
+      localStorage.setItem("email", "");
+
+      window.location.href = "home.html";
+    }
+
+    function goToDashboard() {
+      window.location.href = "home.html";
+    }
+
+    function goToChatbot() {
+      window.location.href = "index.html";
+    }
+
+    function logoutFromLanding() {
+      const savedTheme = localStorage.getItem("lumina_theme");
+
+      localStorage.removeItem("guest_mode");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("full_name");
+      localStorage.removeItem("email");
+      localStorage.removeItem("username");
+      localStorage.removeItem("avatar");
+      localStorage.removeItem("open_chat_id");
+      localStorage.removeItem("open_archived_chat");
+
+      if (savedTheme) {
+        localStorage.setItem("lumina_theme", savedTheme);
+      }
+
+      window.location.href = "landing.html";
+    }
+
+    function openLandingTool(toolName) {
+      const userId = getLandingUserId();
+      const guest = isGuestUser();
+
+      const pages = {
+        home: "home.html",
+        chat: "index.html",
+        image: "image.html",
+        voice: "voice.html",
+        documents: "documents.html",
+        notes: "notes.html",
+        downloads: "downloads.html"
+      };
+
+      if (!pages[toolName]) {
+        showLandingToast("This tool is not available yet.", "warning");
+        return;
+      }
+
+      if (!userId && !guest) {
+        showLandingToast(
+          "Please login or continue as guest to use Lumina AI.",
+          "warning"
+        );
+
+        setTimeout(() => {
+          window.location.href = "auth.html";
+        }, 900);
+
+        return;
+      }
+
+      if (guest && !["chat", "home"].includes(toolName)) {
+        showLandingToast(
+          "Please login to use this AI tool. Guest mode can use Chatbot only.",
+          "warning"
+        );
+
+        setTimeout(() => {
+          window.location.href = "auth.html";
+        }, 1000);
+
+        return;
+      }
+
+      window.location.href = pages[toolName];
+    }
+
+    function setupLandingUserState() {
+      const navActions = document.getElementById("landingNavActions");
+      const heroActions = document.getElementById("landingHeroActions");
+      const finalActions = document.getElementById("landingFinalActions");
+
+      const fullName =
+        localStorage.getItem("full_name") ||
+        localStorage.getItem("username") ||
+        "User";
+
+      if (isLoggedInUser()) {
+        if (navActions) {
+          navActions.innerHTML = `
+            <button type="button" class="landing-user-pill" onclick="goToDashboard()">
+              👋 ${escapeHTML(fullName)}
+            </button>
+
+            <button type="button" class="signup-btn" onclick="goToDashboard()">
+              Go to Dashboard →
+            </button>
+          `;
+        }
+
+        if (heroActions) {
+          heroActions.innerHTML = `
+            <button type="button" class="primary-cta" onclick="goToDashboard()">
+              Go to Dashboard →
+            </button>
+
+            <button type="button" class="secondary-cta" onclick="goToChatbot()">
+              Open Chatbot
+            </button>
+          `;
+        }
+
+        if (finalActions) {
+          finalActions.innerHTML = `
+            <button type="button" class="primary-cta" onclick="goToDashboard()">
+              Continue to Lumina →
+            </button>
+
+            <button type="button" class="secondary-cta" onclick="logoutFromLanding()">
+              Sign Out
+            </button>
+          `;
+        }
+
+        return;
+      }
+
+      if (isGuestUser()) {
+        if (navActions) {
+          navActions.innerHTML = `
+            <button type="button" class="login-btn" onclick="goToChatbot()">
+              Continue as Guest
+            </button>
+
+            <a href="auth.html" class="signup-btn">
+              Login / Sign Up
+            </a>
+          `;
+        }
+
+        if (heroActions) {
+          heroActions.innerHTML = `
+            <button type="button" class="primary-cta" onclick="goToChatbot()">
+              Continue Guest Chat →
+            </button>
+
+            <a href="auth.html" class="secondary-cta">
+              Login to Unlock All
+            </a>
+          `;
+        }
+
+        if (finalActions) {
+          finalActions.innerHTML = `
+            <button type="button" class="primary-cta" onclick="goToChatbot()">
+              Continue as Guest
+            </button>
+
+            <a href="auth.html" class="secondary-cta">
+              Login / Sign Up
+            </a>
+          `;
+        }
+      }
+    }
+
+    window.addEventListener("load", setupLandingUserState);
+  </script>
+
+</body>
+</html>

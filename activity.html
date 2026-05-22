@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina Activity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+      document.documentElement.classList.remove("light-theme", "dark-theme");
+      document.documentElement.classList.add(savedTheme + "-theme");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.remove("light-theme", "dark-theme");
+        document.body.classList.add(savedTheme + "-theme");
+      });
+    })();
+  </script>
+
+  <link rel="icon" type="image/png" href="assets/crop.png" />
+  <link rel="stylesheet" href="activity.css" />
+</head>
+
+<body>
+
+  <div class="activity-page">
+
+    <header class="activity-header">
+
+      <div class="header-left">
+        <div class="brand-icon">
+          <img src="assets/crop.png" alt="Lumina AI" />
+        </div>
+
+        <div>
+          <h1>Activity History</h1>
+          <p>Track your chats, creations, uploads, exports, notes, and workspace actions.</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="secondary-btn" onclick="window.location.href='home.html'">
+          ← Home
+        </button>
+
+        <button type="button" class="danger-btn" onclick="clearActivityHistory()">
+          Clear History
+        </button>
+      </div>
+
+    </header>
+
+    <section class="activity-summary">
+
+      <div class="summary-card">
+        <span>💬</span>
+        <div>
+          <h3 id="chatActivityCount">0</h3>
+          <p>Chat Actions</p>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span>🖼</span>
+        <div>
+          <h3 id="imageActivityCount">0</h3>
+          <p>Image Actions</p>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span>🎙</span>
+        <div>
+          <h3 id="voiceActivityCount">0</h3>
+          <p>Voice Actions</p>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span>📄</span>
+        <div>
+          <h3 id="documentActivityCount">0</h3>
+          <p>Document Actions</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="activity-toolbar">
+
+      <div class="search-box">
+        <span>🔍</span>
+        <input
+          type="text"
+          id="activitySearchInput"
+          placeholder="Search activity..."
+          autocomplete="off"
+        />
+      </div>
+
+      <select id="activityFilter">
+        <option value="all">All Activity</option>
+        <option value="chat">Chat</option>
+        <option value="image">Image</option>
+        <option value="voice">Voice</option>
+        <option value="document">Document</option>
+        <option value="note">Notes</option>
+        <option value="download">Downloads</option>
+        <option value="system">System</option>
+      </select>
+
+    </section>
+
+    <main class="activity-layout">
+
+      <section class="activity-timeline" id="activityTimeline"></section>
+
+      <aside class="activity-side-card">
+
+        <h2>Quick Actions</h2>
+
+        <button onclick="window.location.href='index.html'">
+          💬 Open Chatbot
+        </button>
+
+        <button onclick="window.location.href='image.html'">
+          🖼 Open Image Studio
+        </button>
+
+        <button onclick="window.location.href='voice.html'">
+          🎙 Open Voice Studio
+        </button>
+
+        <button onclick="window.location.href='documents.html'">
+          📄 Open Document Studio
+        </button>
+
+        <button onclick="window.location.href='templates.html'">
+          🧩 Open Templates
+        </button>
+
+      </aside>
+
+    </main>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="activity.js"></script>
+
+</body>
+</html>

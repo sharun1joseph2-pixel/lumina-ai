@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina AI - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="auth.css" />
+
+  <!-- Google Login -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+
+  <a href="landing.html" class="back-landing-link">← Back to Lumina</a>
+
+  <div class="auth-orb orb-1"></div>
+  <div class="auth-orb orb-2"></div>
+  <div class="auth-orb orb-3"></div>
+
+  <main class="auth-page">
+
+    <!-- LEFT SHOWCASE -->
+    <section class="auth-showcase">
+
+      <div class="brand-row">
+        <div class="brand-icon">
+  <img src="assets/crop.png" alt="Lumina AI Logo">
+</div>
+<h2>Lumina AI</h2>
+      </div>
+
+      <h1>
+        Create <br />
+        <span>without limits</span>
+      </h1>
+
+      <p class="showcase-text">
+        Chat with intelligent AI, generate stunning images, bring ideas to life with voice,
+        and keep everything organized in one place.
+      </p>
+
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon chat">💬</div>
+          <div>
+            <h3>Smart Chatbot</h3>
+            <p>Get instant answers and smarter conversations.</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon image">🖼</div>
+          <div>
+            <h3>Image Studio</h3>
+            <p>Create breathtaking visuals from your imagination.</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon voice">🎙</div>
+          <div>
+            <h3>Voice Studio</h3>
+            <p>Turn your ideas into natural and expressive speech.</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon notes">📄</div>
+          <div>
+            <h3>Saved Notes</h3>
+            <p>Save, organize, and revisit your important ideas.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- AUTH CARD -->
+    <section class="auth-card-section">
+
+      <div class="auth-container">
+
+        <h1>✨ Lumina AI</h1>
+        <p class="auth-subtitle">Welcome back! Please sign in to continue.</p>
+
+        <div class="tabs">
+          <button id="loginTab" class="active" type="button" onclick="showLogin()">
+            Login
+          </button>
+
+          <button id="signupTab" type="button" onclick="showSignup()">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- GOOGLE INITIALIZATION -->
+        <div
+          id="g_id_onload"
+          data-client_id="499099999261-v36mseb57nber8rn0s1k199gj2mav1pb.apps.googleusercontent.com"
+          data-callback="handleGoogleLogin"
+          data-auto_prompt="false">
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginForm" class="auth-form">
+
+          <div class="input-wrap">
+            <span>✉</span>
+            <input 
+              type="email" 
+              id="loginEmail" 
+              placeholder="Email address"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="input-wrap">
+            <span>🔒</span>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              name="lumina-login-password"
+              placeholder="Password"
+              autocomplete="new-password"
+              readonly
+              onfocus="this.removeAttribute('readonly')"
+            />
+          </div>
+
+          <button class="main-auth-btn" type="button" onclick="login()">
+            Login →
+          </button>
+
+          <div class="divider">
+            <span></span>
+            <p>or continue with</p>
+            <span></span>
+          </div>
+
+          <button type="button" class="guest-btn" onclick="continueAsGuest()">
+            👤 Continue as Guest
+          </button>
+
+          <div class="google-btn-wrapper">
+            <div 
+              class="g_id_signin"
+              data-type="standard"
+              data-shape="pill"
+              data-theme="outline"
+              data-text="continue_with"
+              data-size="large"
+              data-logo_alignment="left">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="signupForm" class="auth-form hidden">
+
+          <div class="input-wrap">
+            <span>👤</span>
+            <input 
+              type="text" 
+              id="signupName" 
+              placeholder="Full Name"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="input-wrap">
+            <span>✉</span>
+            <input 
+              type="email" 
+              id="signupEmail" 
+              placeholder="Email address"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="input-wrap">
+            <span>@</span>
+            <input 
+              type="text" 
+              id="signupUsername" 
+              placeholder="Username"
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="input-wrap">
+            <span>🔒</span>
+            <input 
+              type="password" 
+              id="signupPassword" 
+              name="lumina-signup-password"
+              placeholder="Password"
+              autocomplete="new-password"
+              readonly
+              onfocus="this.removeAttribute('readonly')"
+            />
+          </div>
+
+          <p id="usernameSuggestions" class="username-suggestions"></p>
+
+          <button class="main-auth-btn" type="button" onclick="signup()">
+            Create Account →
+          </button>
+
+          <div class="divider">
+            <span></span>
+            <p>or sign up with</p>
+            <span></span>
+          </div>
+
+          <button type="button" class="guest-btn" onclick="continueAsGuest()">
+            👤 Continue as Guest
+          </button>
+
+          <div class="google-btn-wrapper">
+            <div 
+              class="g_id_signin"
+              data-type="standard"
+              data-shape="pill"
+              data-theme="outline"
+              data-text="signup_with"
+              data-size="large"
+              data-logo_alignment="left">
+            </div>
+          </div>
+
+        </div>
+
+        <p class="terms-text">
+          By continuing, you agree to our <span>Terms of Service</span> and <span>Privacy Policy</span>.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="auth.js"></script>
+
+</body>
+</html>

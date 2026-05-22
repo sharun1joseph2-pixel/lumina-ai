@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Verified | Lumina AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+      document.documentElement.classList.remove("light-theme", "dark-theme");
+      document.documentElement.classList.add(savedTheme + "-theme");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.remove("light-theme", "dark-theme");
+        document.body.classList.add(savedTheme + "-theme");
+      });
+    })();
+  </script>
+
+  <link rel="icon" type="image/png" href="assets/crop.png" />
+  <link rel="stylesheet" href="verify-success.css" />
+</head>
+
+<body>
+
+  <main class="verify-page">
+
+    <div class="verify-card">
+
+      <div class="verify-logo">
+        <img src="assets/crop.png" alt="Lumina AI" />
+      </div>
+
+      <div id="verifyIcon" class="verify-icon success">
+        ✅
+      </div>
+
+      <h1 id="verifyTitle">Gmail Verified Successfully</h1>
+
+      <p id="verifyMessage">
+        Your Lumina account is now verified. You can now purchase Starter, Creator, or Pro plans.
+      </p>
+
+      <div class="verify-info-box">
+        <span>Status</span>
+        <strong id="verifyStatusText">Verified</strong>
+      </div>
+
+      <div class="verify-actions">
+        <button type="button" onclick="goToHome()">
+          Continue to Lumina
+        </button>
+
+        <button type="button" class="secondary" onclick="goToPlans()">
+          View Plans
+        </button>
+      </div>
+
+      <small>
+        You can close this page if you already have Lumina open.
+      </small>
+
+    </div>
+
+  </main>
+
+  <script src="verify-success.js"></script>
+</body>
+</html>

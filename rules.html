@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina Rules & Safety</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="rules.css">
+</head>
+
+<body>
+
+<div class="rules-page">
+
+  <nav class="rules-nav">
+    <div class="logo">✦ LUMINA SAFETY CENTER</div>
+
+    <a href="home.html" class="back-btn">← Back Home</a>
+  </nav>
+
+  <section class="rules-hero">
+    <span class="badge">SAFE AI USAGE</span>
+
+    <h1>RULES & SAFETY</h1>
+
+    <p>
+      Lumina is built for learning, creativity, productivity, and responsible AI use.
+      Please follow these rules to keep the environment safe and respectful.
+    </p>
+  </section>
+
+  <section class="rules-grid">
+
+    <div class="rule-card">
+      <div class="rule-icon">🚫</div>
+      <h2>No Harmful Content</h2>
+      <p>
+        Do not use Lumina to create harmful, violent, illegal, hateful, abusive,
+        or dangerous content. Lumina should be used to help, not harm.
+      </p>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-icon">🔒</div>
+      <h2>Respect Privacy</h2>
+      <p>
+        Do not share private information about yourself or others unless it is necessary.
+        Avoid entering passwords, OTPs, bank details, or personal documents.
+      </p>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-icon">⚠️</div>
+      <h2>Do Not Upload Sensitive Data</h2>
+      <p>
+        Avoid uploading sensitive images, private files, confidential documents,
+        identity proofs, or personal records into the app.
+      </p>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-icon">🎓</div>
+      <h2>Educational & Creative Use</h2>
+      <p>
+        Use Lumina for studying, coding, brainstorming, writing, designing,
+        image creation, voice generation, and productive work.
+      </p>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-icon">👤</div>
+      <h2>Account Responsibility</h2>
+      <p>
+        You are responsible for your account activity. Keep your login secure,
+        sign out on shared devices, and do not misuse the platform.
+      </p>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-icon">✅</div>
+      <h2>Use AI Responsibly</h2>
+      <p>
+        AI can make mistakes. Always verify important information before using it
+        for academic, professional, financial, medical, or legal decisions.
+      </p>
+    </div>
+
+  </section>
+
+  <section class="safety-note">
+    <h2>Our Goal</h2>
+
+    <p>
+      Lumina AI is designed to support safe learning, creativity, and productivity.
+      By using Lumina responsibly, you help create a cleaner and safer AI environment.
+    </p>
+  </section>
+
+</div>
+<script>
+  function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme");
+  document.body.classList.remove("dark-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.add("dark-theme");
+  }
+}
+window.onload = function () {
+  applyLuminaTheme();
+};
+</script>
+</body>
+</html>

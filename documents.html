@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina AI - Document Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <script src="lumina-activity.js"></script>
+  <link rel="stylesheet" href="documents.css">
+
+  <!-- Markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+
+  <div class="documents-page">
+
+    <!-- HEADER -->
+    <header class="documents-header">
+      <div>
+        <h1>📄 Lumina Document Studio</h1>
+        <p>Upload documents and let Lumina summarize, explain, and extract insights.</p>
+      </div>
+
+      <div class="documents-header-actions">
+        <button type="button" onclick="window.location.href='home.html'">
+          ← Home
+        </button>
+
+        <button type="button" onclick="window.location.href='index.html'">
+          Chatbot
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <main class="documents-layout">
+
+      <!-- UPLOAD CARD -->
+      <section class="upload-card">
+
+        <div class="studio-badge">
+          AI DOCUMENT ANALYZER
+        </div>
+
+        <h2>Upload your document</h2>
+
+        <label for="documentFile">Select file</label>
+
+        <div 
+          class="file-drop-box" 
+          id="fileDropBox"
+          role="button"
+          tabindex="0"
+        >
+          <input 
+            type="file" 
+            id="documentFile" 
+            accept=".pdf,.docx,.txt"
+            hidden
+          >
+
+          <div id="fileDropContent">
+            <span>📎</span>
+            <h3>Choose PDF, DOCX, or TXT</h3>
+            <p>Click here to upload a document</p>
+          </div>
+        </div>
+
+        <label for="documentTask">What should Lumina do?</label>
+
+        <select id="documentTask">
+          <option value="summary">Summarize document</option>
+          <option value="simple">Explain in simple words</option>
+          <option value="key_points">Extract key points</option>
+          <option value="questions">Create questions & answers</option>
+          <option value="table">Create tables</option>
+        </select>
+
+        <button type="button" id="analyzeDocumentBtn" onclick="return analyzeDocument(event)">
+  ✨ Analyze Document
+</button>
+
+        <p class="documents-note">
+          For best results, upload readable PDFs, DOCX notes, or plain text files.
+        </p>
+
+      </section>
+
+      <!-- ANALYSIS CARD -->
+      <section class="analysis-card">
+
+        <h2>Analysis Result</h2>
+
+        <div id="analysisResult" class="analysis-result empty">
+          <span>📄</span>
+          <p>Your document analysis will appear here.</p>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- HISTORY SECTION -->
+    <section class="document-history-section">
+
+      <div class="history-header">
+        <h2>Document History</h2>
+
+        <button type="button" id="deleteAllDocumentsBtn">
+          Delete All
+        </button>
+      </div>
+
+      <div id="documentHistory" class="document-history-list"></div>
+
+    </section>
+
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- DOCUMENT SCRIPT -->
+  <script src="documents.js"></script>
+
+</body>
+</html> 

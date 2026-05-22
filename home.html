@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina AI Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+
+<div class="home-page">
+   <div id="guestModeBanner" class="guest-mode-banner hidden">
+  <div>
+    <strong>Guest Mode</strong>
+    <span>You can use Chatbot, but Image Studio, Voice Studio, Notes, and saved history require login.</span>
+  </div>
+
+  <button type="button" onclick="window.location.href='auth.html'">
+    Login / Sign Up
+  </button>
+</div>
+  <!-- NAVBAR -->
+  <nav class="home-nav">
+
+    <!-- LOGO + LANDING BUTTON -->
+    <div class="home-brand-block">
+      <div class="logo-box">
+        <div class="brand-logo">
+  <img src="assets/crop.png" alt="Lumina AI Logo">
+</div>
+<span>LUMINA AI</span>
+      </div>
+
+      <button class="landing-back-btn" onclick="goToLandingPage()">
+        ← ABOUT
+      </button>
+    </div>
+
+    <div class="home-profile-wrapper" id="homeProfileWrapper">
+
+      <button class="home-profile-btn" id="homeProfileBtn" onclick="toggleHomeProfileMenu()">
+        <span id="homeProfileInitials">U</span>
+      </button>
+
+      <div class="home-profile-menu" id="homeProfileMenu">
+
+        <button onclick="openPersonalInfo()">
+          👤 Personal Information
+        </button>
+
+        <button onclick="openAccountVerification()">
+          ✅ Account Verification
+        </button>
+        
+        <button onclick="openSearchPage()">
+          🔎 Global Search
+        </button>
+
+        <button onclick="openArchiveChats()">
+          📦 Archive Chats
+        </button>
+        
+        <button onclick="window.location.href='notes.html'">
+          ⭐ Notes
+        </button>
+
+        <button onclick="window.location.href='downloads.html'">
+          ⬇ Downloads
+        </button>
+
+        <button class="home-shortcut-btn" onclick="window.location.href='activity.html'">
+          🕒 Activity
+        </button>
+        
+        <button onclick="openSettingsPage()">
+          ⚙ Settings
+        </button>
+
+        <button onclick="openRulesPage()">
+          🛡 Rules & Safety
+        </button>
+
+        <button onclick="homeSignOut()" class="danger-option">
+          🚪 Sign Out
+        </button>
+
+      </div>
+    
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="badge">✦ YOUR AI CREATIVE SUITE</div>
+
+    <h1>CREATE WITHOUT LIMITS</h1>
+
+    <p>
+      Chat, imagine, and speak with the most expressive AI assistant.
+      <br>
+      Everything works right away — smart, fast, and futuristic.
+    </p>
+
+    <div class="hero-decor left-decor">
+      <div class="ai-bot-orb">🤖</div>
+      <span class="float-icon chat-float">💬</span>
+      <span class="float-icon code-float">&lt;/&gt;</span>
+    </div>
+
+    <div class="hero-decor right-decor">
+      <div class="voice-orb">🎧</div>
+      <span class="float-icon audio-float">〰</span>
+      <span class="float-icon image-float">🖼</span>
+    </div>
+
+  </section>
+
+  <!-- DASHBOARD SUMMARY -->
+<section class="dashboard-summary">
+
+  <div class="summary-card">
+    <div class="summary-icon">💬</div>
+
+    <div class="summary-info">
+      <h3 id="statsChats">0</h3>
+      <p>Chats Created</p>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-icon">🖼</div>
+
+    <div class="summary-info">
+      <h3 id="statsImages">0</h3>
+      <p>Images Generated</p>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-icon">🎙</div>
+
+    <div class="summary-info">
+      <h3 id="statsAudio">0</h3>
+      <p>Audio Created</p>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-icon">📅</div>
+
+    <div class="summary-info">
+      <h3 id="statsLastActive">--</h3>
+      <p>Last Active</p>
+    </div>
+  </div>
+
+  <div class="summary-card credit-summary-card">
+  <div class="summary-icon credit-icon">💎</div>
+
+  <div class="summary-info credit-info">
+    <h3 id="userCredits">--</h3>
+    <p id="userPlanName">Lumina Credits</p>
+
+    <div class="daily-mini-bar">
+      <div id="dailyCreditFill" class="daily-mini-fill"></div>
+    </div>
+
+    <small id="dailyCreditText">Daily: -- / --</small>
+  </div>
+
+  <button
+    type="button"
+    class="mini-upgrade-btn"
+    onclick="window.location.href='plans.html'"
+  >
+    Upgrade
+  </button>
+</div>
+
+</section>
+
+  <!-- FEATURE CARDS -->
+  <section class="cards">
+
+    <!-- CHAT BOT CARD -->
+    <div class="feature-card purple chat-card">
+      <div class="feature-top-line"></div>
+
+      <div class="feature-icon">🤖</div>
+
+      <span class="tag purple-tag">CHAT BOT</span>
+
+      <h2>TALK TO INTELLIGENCE</h2>
+
+      <p>
+        Converse with Lumina about anything — writing, code, analysis, creativity.
+        Context-aware, multilingual, instant.
+      </p>
+
+      <div class="chat-preview-area">
+
+        <div class="feature-list">
+          <div>
+            <span>✏️</span>
+            Writing & Editing
+          </div>
+
+          <div>
+            <span>💻</span>
+            Coding Help
+          </div>
+
+          <div>
+            <span>📊</span>
+            Data Analysis
+          </div>
+
+          <div>
+            <span>💡</span>
+            Brainstorming
+          </div>
+
+          <div>
+            <span>❔</span>
+            General Q&A
+          </div>
+        </div>
+
+        <div class="mini-chat-box">
+
+          <div class="mini-user-msg">
+            Explain quantum computing in simple terms.
+          </div>
+
+          <div class="mini-ai-row">
+            <div class="mini-bot">🤖</div>
+
+            <div class="mini-ai-msg">
+              Quantum computing uses qubits instead of bits. Qubits can be in multiple states at once, allowing computers to solve complex problems faster.
+            </div>
+          </div>
+
+          <div class="mini-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <button class="launch-btn" onclick="openChatbot()">
+        💬 Launch Chat Bot →
+      </button>
+    </div>
+
+    <!-- IMAGE STUDIO CARD -->
+    <div class="feature-card blue image-card">
+      <div class="feature-top-line blue-line"></div>
+
+      <div class="feature-icon">🖼️</div>
+
+      <span class="tag blue-tag">AI IMAGE STUDIO</span>
+
+      <h2>VISUALISE THE IMPOSSIBLE</h2>
+
+      <p>
+        Describe any scene and watch it appear. Photorealistic landscapes,
+        concept art, abstract worlds — no limits.
+      </p>
+
+      <div class="image-preview-area">
+
+        <div class="fake-prompt">
+          <span>A futuristic city floating above clouds at sunset</span>
+          <b>✨</b>
+        </div>
+
+        <div class="prompt-tags">
+          <span>futuristic</span>
+          <span>sunset</span>
+          <span>cityscape</span>
+          <span>cinematic</span>
+          <span>+</span>
+        </div>
+
+        <div class="style-tags">
+          <span class="active-style">✨ Recommended</span>
+          <span>Realistic</span>
+          <span>Anime</span>
+          <span>3D</span>
+          <span>Watercolor</span>
+          <span>Cyberpunk</span>
+        </div>
+
+        <div class="image-mini-grid">
+          <div class="image-tile tile-one"></div>
+          <div class="image-tile tile-two"></div>
+          <div class="image-tile tile-three"></div>
+        </div>
+
+      </div>
+
+      <button class="launch-btn" onclick="openLockedFeature('Image Studio')">
+        🖼 Launch AI Image Studio →
+      </button>
+    </div>
+
+    <!-- VOICE STUDIO CARD -->
+    <div class="feature-card pink voice-card">
+      <div class="feature-top-line pink-line"></div>
+
+      <div class="feature-icon">🎙️</div>
+
+      <span class="tag pink-tag">VOICE STUDIO</span>
+
+      <h2>WORDS THAT BREATHE</h2>
+
+      <p>
+        Transform text into expressive, natural-sounding speech. Multiple voices,
+        languages, and emotional styles.
+      </p>
+
+      <div class="voice-preview-area">
+
+        <div class="wave-card">
+
+          <div class="play-circle">▶</div>
+
+          <div class="wave-lines">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="audio-time">00:18</div>
+
+        </div>
+
+        <div class="voice-cards">
+
+          <div class="voice-mini-card active-voice">
+            <div class="voice-avatar">👩</div>
+            <div>
+              <h4>Aria 💜</h4>
+              <p>Warm · Friendly</p>
+            </div>
+          </div>
+
+          <div class="voice-mini-card">
+            <div class="voice-avatar">👨</div>
+            <div>
+              <h4>Liam</h4>
+              <p>Calm · Natural</p>
+            </div>
+          </div>
+
+          <div class="voice-mini-card">
+            <div class="voice-avatar">🧑</div>
+            <div>
+              <h4>Nova</h4>
+              <p>Energetic · Bright</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="voice-feature-strip">
+
+          <div>
+            <span>🌐</span>
+            <p>Multiple Voices<br>& Languages</p>
+          </div>
+
+          <div>
+            <span>⬇</span>
+            <p>Download<br>Audio</p>
+          </div>
+
+          <div>
+            <span>T</span>
+            <p>Text-to-Speech<br>Instantly</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <button class="launch-btn" onclick="openLockedFeature('Voice Studio')">
+        🎙 Launch Voice Studio →
+      </button>
+    </div>
+      <!-- DOCUMENT STUDIO CARD -->
+<div class="feature-card document-card">
+  <div class="feature-top-line document-line"></div>
+
+  <div class="feature-icon document-feature-icon">
+    📄
+  </div>
+
+  <span class="tag document-tag">DOCUMENT STUDIO</span>
+
+  <h2>UNDERSTAND DOCUMENTS FAST</h2>
+
+  <p>
+    Upload PDFs, DOCX files, or notes and let Lumina summarize,
+    explain, extract key points, and create questions.
+  </p>
+
+  <div class="document-preview-area">
+    <div class="document-mini-box">
+      <div class="doc-row">
+        <span>📘</span>
+        <div>
+          <strong>Summary</strong>
+          <p>Quick structured overview</p>
+        </div>
+      </div>
+
+      <div class="doc-row">
+        <span>🧠</span>
+        <div>
+          <strong>Simple Explanation</strong>
+          <p>Student-friendly language</p>
+        </div>
+      </div>
+
+      <div class="doc-row">
+        <span>📝</span>
+        <div>
+          <strong>Questions & Answers</strong>
+          <p>Exam-style preparation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="launch-btn document-launch-btn" onclick="openLockedFeature('Document Studio')">
+    📄 Launch Document Studio →
+  </button>
+</div>
+
+<!-- PROMPT TEMPLATES CARD -->
+<div class="feature-card template-card">
+  <div class="feature-top-line template-line"></div>
+
+  <div class="feature-icon template-feature-icon">
+    🧩
+  </div>
+
+  <span class="tag template-tag">PROMPT TEMPLATES</span>
+
+  <h2>START WITH SMART PROMPTS</h2>
+
+  <p>
+    Use ready-made prompts for study, coding, image generation,
+    content creation, career help, and college projects.
+  </p>
+
+  <div class="template-preview-area">
+
+    <div class="template-mini-box">
+
+      <div class="template-row">
+        <span>📘</span>
+        <div>
+          <strong>Study Prompts</strong>
+          <p>Notes, viva questions, and simple explanations</p>
+        </div>
+      </div>
+
+      <div class="template-row">
+        <span>💻</span>
+        <div>
+          <strong>Coding Prompts</strong>
+          <p>Debug code, explain logic, and build projects</p>
+        </div>
+      </div>
+
+      <div class="template-row">
+        <span>🖼</span>
+        <div>
+          <strong>Creative Prompts</strong>
+          <p>Image prompts, captions, ideas, and content</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <button class="launch-btn template-launch-btn" onclick="window.location.href='templates.html'">
+    🧩 Open Prompt Templates →
+  </button>
+</div>
+  </section>
+</div>
+
+
+<!-- PROFILE / SETTINGS MODAL -->
+<div class="home-modal" id="homeModal">
+
+  <button class="home-modal-close" onclick="closeHomeModal()">
+    ×
+  </button>
+
+  <div class="home-modal-box">
+    <div id="homeModalContent"></div>
+  </div>
+
+</div>
+
+<!-- GUEST LOGIN MODAL -->
+<div class="guest-login-modal" id="guestLoginModal">
+  <div class="guest-login-box">
+    <button class="guest-login-close" onclick="closeGuestLoginModal()">×</button>
+
+    <div class="guest-lock-icon">🔒</div>
+
+    <h2>Login Required</h2>
+
+    <p id="guestLoginMessage">
+      Please login to use this feature.
+    </p>
+
+    <div class="guest-login-actions">
+      <button onclick="goToAuth()">Login / Sign Up</button>
+      <button class="secondary" onclick="closeGuestLoginModal()">Continue as Guest</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastContainer" class="toast-container"></div>
+
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+let currentProfile = null;
+
+/* =========================
+   BASIC HELPERS
+========================= */
+
+function getUserId() {
+  return localStorage.getItem("user_id");
+}
+
+function isGuestUser() {
+  return localStorage.getItem("guest_mode") === "true";
+}
+
+function isLoggedInUser() {
+  const userId = getUserId();
+  return userId && !isGuestUser();
+}
+
+function escapeHTML(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getInitialsFromName(fullName) {
+  if (!fullName) return "U";
+
+  const parts = fullName.trim().split(" ").filter(Boolean);
+
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  return parts[0][0].toUpperCase();
+}
+
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+
+  if (!container) {
+    console.log(message);
+    return;
+  }
+
+  const toast = document.createElement("div");
+
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
+function goToLandingPage() {
+  window.location.href = "landing.html";
+}
+
+function setButtonLoading(button, isLoading, loadingText = "Loading...") {
+  if (!button) return;
+
+  if (isLoading) {
+    button.dataset.originalText = button.innerHTML;
+    button.innerHTML = loadingText;
+    button.disabled = true;
+    button.classList.add("loading-btn");
+  } else {
+    button.innerHTML = button.dataset.originalText || button.innerHTML;
+    button.disabled = false;
+    button.classList.remove("loading-btn");
+  }
+}
+
+/* =========================
+   THEME
+========================= */
+
+function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme");
+  document.body.classList.remove("dark-theme");
+
+  if (theme === "dark") {
+    document.body.classList.add("dark-theme");
+  } else {
+    document.body.classList.add("light-theme");
+  }
+}
+
+/* =========================
+   GUEST MODE
+========================= */
+
+function setupGuestHomeUI() {
+  if (!isGuestUser()) return;
+
+  const profileWrapper = document.getElementById("homeProfileWrapper");
+
+  if (profileWrapper) {
+    profileWrapper.innerHTML = `
+      <button class="guest-login-btn" onclick="goToAuth()">
+        Login / Sign Up
+      </button>
+    `;
+  }
+
+  document.body.classList.add("guest-home");
+
+  const imageBtn = document.querySelector("[onclick=\"openLockedFeature('Image Studio')\"]");
+  const voiceBtn = document.querySelector("[onclick=\"openLockedFeature('Voice Studio')\"]");
+
+  if (imageBtn) {
+    imageBtn.innerHTML = "🔒 Login to use Image Studio";
+  }
+
+  if (voiceBtn) {
+    voiceBtn.innerHTML = "🔒 Login to use Voice Studio";
+  }
+  
+  const documentBtn = document.querySelector("[onclick=\"openLockedFeature('Document Studio')\"]");
+  
+if (documentBtn) {
+  documentBtn.innerHTML = "🔒 Login to use Document Studio";
+}
+
+
+  const statsImages = document.getElementById("statsImages");
+  const statsAudio = document.getElementById("statsAudio");
+  const statsLastActive = document.getElementById("statsLastActive");
+
+  if (statsImages) statsImages.textContent = "Locked";
+  if (statsAudio) statsAudio.textContent = "Locked";
+  if (statsLastActive) statsLastActive.textContent = "--";
+}
+
+function showGuestLoginModal(message) {
+  const modal = document.getElementById("guestLoginModal");
+  const text = document.getElementById("guestLoginMessage");
+
+  if (text) {
+    text.textContent = message || "Please login to use this feature.";
+  }
+
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function closeGuestLoginModal() {
+  const modal = document.getElementById("guestLoginModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function goToAuth() {
+  localStorage.removeItem("guest_mode");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("full_name");
+  localStorage.removeItem("username");
+  localStorage.removeItem("email");
+
+  window.location.href = "auth.html";
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function openChatbot() {
+  window.location.href = "index.html";
+}
+
+function openLockedFeature(featureName) {
+  if (isGuestUser()) {
+    showGuestLoginModal(`${featureName} is available after login.`);
+    return;
+  }
+
+  if (featureName === "Image Studio") {
+    window.location.href = "image.html";
+    return;
+  }
+
+  if (featureName === "Voice Studio") {
+    window.location.href = "voice.html";
+    return;
+  }
+
+  if (featureName === "Document Studio") {
+    window.location.href = "documents.html";
+    return;
+  }
+}
+function openSettingsPage() {
+  closeProfileMenu();
+  window.location.href = "settings.html";
+}
+
+function openSearchPage() {
+  closeProfileMenu();
+  window.location.href = "search.html";
+}
+
+function openArchiveChats() {
+  closeProfileMenu();
+  window.location.href = "archive.html";
+}
+
+function openRulesPage() {
+  closeProfileMenu();
+  window.location.href = "rules.html";
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+async function loadHomeProfile() {
+  if (isGuestUser()) {
+    return;
+  }
+
+  const user_id = getUserId();
+
+  if (!user_id) {
+    window.location.href = "auth.html";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/profile/${user_id}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data);
+      showToast("Could not load profile.", "error");
+      return;
+    }
+
+    currentProfile = data;
+
+    localStorage.setItem("full_name", data.full_name || "User");
+    localStorage.setItem("email", data.email || "");
+    localStorage.setItem("username", data.username || "");
+
+    document.getElementById("homeProfileInitials").textContent =
+      getInitialsFromName(data.full_name);
+
+  } catch (err) {
+    console.error("Profile load failed:", err);
+    showToast("Profile loading failed.", "error");
+  }
+}
+
+function toggleHomeProfileMenu() {
+  if (isGuestUser()) {
+    goToAuth();
+    return;
+  }
+
+  const menu = document.getElementById("homeProfileMenu");
+
+  if (!menu) return;
+
+  menu.style.display =
+    menu.style.display === "flex" ? "none" : "flex";
+}
+
+function closeProfileMenu() {
+  const menu = document.getElementById("homeProfileMenu");
+
+  if (menu) {
+    menu.style.display = "none";
+  }
+}
+
+async function openPersonalInfo() {
+  closeProfileMenu();
+
+  if (isGuestUser()) {
+    showGuestLoginModal("Please login to view personal information.");
+    return;
+  }
+
+  const user_id = getUserId();
+
+  if (!user_id) {
+    showToast("User not logged in.", "warning");
+    window.location.href = "auth.html";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/profile/${user_id}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.detail || "Could not load profile.", "error");
+      return;
+    }
+
+    currentProfile = data;
+
+    const fullName = escapeHTML(data.full_name || "");
+    const email = escapeHTML(data.email || "");
+    const phone = escapeHTML(data.phone || "");
+    const bio = escapeHTML(data.bio || "");
+    const occupation = escapeHTML(data.occupation || "");
+
+    document.getElementById("homeModalContent").innerHTML = `
+      <h2 class="profile-modal-title">👤 Personal Information</h2>
+
+      <label>Name</label>
+      <input id="profileFullName" value="${fullName}">
+
+      <label>Gmail</label>
+      <input value="${email}" disabled>
+
+      <label>Phone Number</label>
+      <input id="profilePhone" placeholder="Enter phone number" value="${phone}">
+
+      <label>Bio</label>
+      <textarea id="profileBio" placeholder="Write something about yourself">${bio}</textarea>
+
+      <label>Occupation</label>
+      <input id="profileOccupation" placeholder="Student, Developer, Designer..." value="${occupation}">
+
+      <button id="saveProfileBtn" onclick="savePersonalInfo()">
+        Save Information
+      </button>
+    `;
+
+    document.getElementById("homeModal").style.display = "flex";
+
+  } catch (err) {
+    console.error("PROFILE LOAD ERROR:", err);
+    showToast("Profile loading failed.", "error");
+  }
+}
+
+async function savePersonalInfo() {
+  if (isGuestUser()) {
+    showGuestLoginModal("Please login to save profile information.");
+    return;
+  }
+
+  const user_id = getUserId();
+  const saveBtn = document.getElementById("saveProfileBtn");
+
+  if (!user_id) {
+    showToast("User not logged in.", "warning");
+    window.location.href = "auth.html";
+    return;
+  }
+
+  const full_name = document.getElementById("profileFullName").value.trim();
+  const phone = document.getElementById("profilePhone").value.trim();
+  const bio = document.getElementById("profileBio").value.trim();
+  const occupation = document.getElementById("profileOccupation").value.trim();
+
+  setButtonLoading(saveBtn, true, "Saving...");
+
+  try {
+    const res = await fetch(`${API}/profile/${user_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        full_name,
+        phone,
+        bio,
+        occupation
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.detail || "Could not update profile.", "error");
+      return;
+    }
+
+    currentProfile = data;
+
+    localStorage.setItem("full_name", data.full_name || "User");
+    localStorage.setItem("email", data.email || "");
+    localStorage.setItem("username", data.username || "");
+
+    document.getElementById("homeProfileInitials").textContent =
+      getInitialsFromName(data.full_name);
+
+    showToast("Profile saved successfully.", "success");
+
+  } catch (err) {
+    console.error("PROFILE UPDATE ERROR:", err);
+    showToast("Profile update failed.", "error");
+  } finally {
+    setButtonLoading(saveBtn, false);
+  }
+}
+
+function openAccountVerification() {
+  closeProfileMenu();
+
+  if (isGuestUser()) {
+    showGuestLoginModal("Please login to view account verification.");
+    return;
+  }
+
+  const email =
+    currentProfile?.email ||
+    localStorage.getItem("email") ||
+    "Not available";
+
+  const authProvider =
+    currentProfile?.auth_provider ||
+    localStorage.getItem("auth_provider") ||
+    "email";
+
+  const emailVerified =
+  currentProfile?.email_verified === true;
+
+  let verificationStatusHTML = "";
+
+  if (authProvider === "google" || emailVerified) {
+    verificationStatusHTML = `
+      <div class="verification-status success">
+        <div class="verification-status-icon">✅</div>
+        <div>
+          <h3>Gmail Verified</h3>
+          <p>Your account is verified and ready for plan purchases.</p>
+        </div>
+      </div>
+    `;
+  } else {
+    verificationStatusHTML = `
+      <div class="verification-status warning">
+        <div class="verification-status-icon">📧</div>
+        <div>
+          <h3>Gmail Not Verified</h3>
+          <p>Verify your Gmail before purchasing Starter, Creator, or Pro plans.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById("homeModalContent").innerHTML = `
+    <h2>Account Verification</h2>
+
+    <p>Your email account:</p>
+
+    <div class="verified-email">
+      ${escapeHTML(email)}
+    </div>
+
+    ${verificationStatusHTML}
+
+    ${
+      authProvider === "google" || emailVerified
+        ? `
+          <p class="verified-text">
+            Your account is verified. If you logged in using Google, Gmail verification is automatic.
+          </p>
+        `
+        : `
+          <p class="verified-text">
+            We will send a secure verification link to your Gmail. No OTP is required.
+          </p>
+
+          <button class="home-modal-primary-btn" onclick="sendHomeVerificationLink()">
+            Send Verification Link
+          </button>
+
+          <p class="verification-small-text">
+            You can also verify instantly by logging in once with Google using the same Gmail.
+          </p>
+        `
+    }
+
+    <button onclick="closeHomeModal()">
+      Okay
+    </button>
+  `;
+
+  document.getElementById("homeModal").style.display = "flex";
+}
+
+async function sendHomeVerificationLink() {
+  const email =
+    currentProfile?.email ||
+    localStorage.getItem("email") ||
+    "";
+
+  if (!email || email === "Not available") {
+    showToast("Email not found. Please login again.", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/resend-verification`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.detail || "Could not send verification link.");
+    }
+
+    if (data.already_verified) {
+      localStorage.setItem("email_verified", "true");
+
+      if (currentProfile) {
+        currentProfile.email_verified = true;
+      }
+
+      showToast("Your Gmail is already verified.", "success");
+      closeHomeModal();
+      return;
+    }
+
+    showToast("Verification link sent to your Gmail.", "success");
+
+  } catch (err) {
+    console.error("HOME VERIFICATION LINK ERROR:", err);
+    showToast(err.message || "Could not send verification link.", "error");
+  }
+}
+
+function closeHomeModal() {
+  document.getElementById("homeModal").style.display = "none";
+}
+
+function homeSignOut() {
+  const savedTheme = localStorage.getItem("lumina_theme");
+
+  localStorage.removeItem("guest_mode");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("full_name");
+  localStorage.removeItem("email");
+  localStorage.removeItem("username");
+  localStorage.removeItem("avatar");
+  localStorage.removeItem("open_chat_id");
+  localStorage.removeItem("open_archived_chat");
+
+  if (savedTheme) {
+    localStorage.setItem("lumina_theme", savedTheme);
+  }
+
+  window.location.href = "auth.html";
+}
+
+/* =========================
+   STATS
+========================= */
+
+async function loadDashboardStats() {
+  if (isGuestUser()) {
+    document.getElementById("statsChats").textContent = "Guest";
+    document.getElementById("statsImages").textContent = "Locked";
+    document.getElementById("statsAudio").textContent = "Locked";
+    document.getElementById("statsLastActive").textContent = "--";
+    return;
+  }
+
+  const user_id = getUserId();
+
+  if (!user_id) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/dashboard-stats/${user_id}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data);
+      return;
+    }
+
+    document.getElementById("statsChats").textContent =
+      data.chats_created || 0;
+
+    document.getElementById("statsImages").textContent =
+      data.images_generated || 0;
+
+    document.getElementById("statsAudio").textContent =
+      data.audio_created || 0;
+
+    document.getElementById("statsLastActive").textContent =
+      formatLastActive(data.last_active);
+
+  } catch (err) {
+    console.error("Dashboard stats failed:", err);
+  }
+}
+
+function formatLastActive(value) {
+  if (!value || value === "No activity yet") {
+    return "--";
+  }
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) {
+    return "--";
+  }
+
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 1) {
+    return "Just now";
+  }
+
+  if (diffMins < 60) {
+    return `${diffMins} min ago`;
+  }
+
+  if (diffHours < 24) {
+    return `${diffHours} hr ago`;
+  }
+
+  if (diffDays < 7) {
+    return `${diffDays} day ago`;
+  }
+
+  return date.toLocaleDateString();
+}
+
+/* =========================
+   PAGE EVENTS
+========================= */
+
+window.addEventListener("click", function(e) {
+  const wrapper = document.querySelector(".home-profile-wrapper");
+
+  if (wrapper && !wrapper.contains(e.target)) {
+    closeProfileMenu();
+  }
+});
+
+window.onload = function () {
+  applyLuminaTheme();
+  setupGuestHomeUI();
+  loadHomeProfile();
+  loadDashboardStats();
+};
+
+async function loadUserPlan() {
+  const userId = localStorage.getItem("user_id");
+
+  if (!userId) return;
+
+  try {
+    const res = await fetch(`${API}/user-plan/${userId}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.detail || "Could not load plan.");
+    }
+
+    const creditsBox = document.getElementById("userCredits");
+    const planBox = document.getElementById("userPlanName");
+    const dailyText = document.getElementById("dailyCreditText");
+    const dailyFill = document.getElementById("dailyCreditFill");
+
+    const credits = Number(data.credits || 0).toLocaleString("en-IN");
+
+    const dailyUsed = Number(data.daily_used_credits || 0);
+    const dailyLimit = Number(data.daily_credit_limit || 0);
+
+    const dailyUsedFormatted = dailyUsed.toLocaleString("en-IN");
+    const dailyLimitFormatted = dailyLimit.toLocaleString("en-IN");
+
+    const dailyPercent =
+      dailyLimit > 0
+        ? Math.min((dailyUsed / dailyLimit) * 100, 100)
+        : 0;
+
+    if (creditsBox) {
+      creditsBox.textContent = credits;
+    }
+
+    if (planBox) {
+      planBox.textContent = `${capitalizePlan(data.plan)} Plan`;
+    }
+
+    if (dailyText) {
+      dailyText.textContent = `Daily: ${dailyUsedFormatted} / ${dailyLimitFormatted}`;
+    }
+
+    if (dailyFill) {
+      dailyFill.style.width = `${dailyPercent}%`;
+    }
+
+  } catch (err) {
+    console.error("LOAD USER PLAN ERROR:", err);
+  }
+}
+
+function capitalizePlan(plan) {
+  const value = String(plan || "free");
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+window.addEventListener("load", loadUserPlan);
+
+function handleGuestModeUI() {
+  const userId = localStorage.getItem("user_id") || "";
+  const guestMode = localStorage.getItem("guest_mode") === "true";
+
+  const guestBanner = document.getElementById("guestModeBanner");
+  const loginButtons = document.querySelectorAll(".guest-login-btn, .login-signup-btn");
+
+  const isGuest = guestMode || userId.startsWith("guest_") || !userId;
+
+  if (guestBanner) {
+    guestBanner.classList.toggle("hidden", !isGuest);
+  }
+
+  loginButtons.forEach((button) => {
+    button.style.display = isGuest ? "inline-flex" : "none";
+  });
+
+  if (document.body) {
+    document.body.classList.toggle("guest-home", isGuest);
+    document.body.classList.toggle("logged-in-home", !isGuest);
+  }
+}
+
+window.addEventListener("load", handleGuestModeUI);
+
+
+</script>
+
+</body>
+</html>

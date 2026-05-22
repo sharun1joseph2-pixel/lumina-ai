@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina Templates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Early theme load -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+      document.documentElement.classList.remove("light-theme", "dark-theme");
+      document.documentElement.classList.add(savedTheme + "-theme");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.remove("light-theme", "dark-theme");
+        document.body.classList.add(savedTheme + "-theme");
+      });
+    })();
+  </script>
+<script src="lumina-activity.js"></script>
+  <link rel="icon" type="image/png" href="assets/crop.png" />
+  <link rel="stylesheet" href="templates.css" />
+</head>
+
+<body>
+
+  <div class="templates-page">
+
+    <!-- HEADER -->
+    <header class="templates-header">
+      <div class="header-left">
+        <div class="brand-icon">
+          <img src="assets/crop.png" alt="Lumina AI" />
+        </div>
+
+        <div>
+          <h1>Prompt Templates</h1>
+          <p>Start faster with ready-made prompts for study, coding, creativity, projects, and more.</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="secondary-btn" onclick="window.location.href='home.html'">
+          ← Home
+        </button>
+
+        <button type="button" class="primary-btn" onclick="window.location.href='index.html'">
+          Open Chatbot
+        </button>
+      </div>
+    </header>
+
+    <!-- SEARCH + CATEGORY -->
+    <section class="templates-toolbar">
+
+      <div class="search-box">
+        <span>🔍</span>
+        <input
+          type="text"
+          id="templateSearchInput"
+          placeholder="Search templates..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="category-pills" id="categoryPills">
+        <button class="category-pill active" data-category="all">All</button>
+        <button class="category-pill" data-category="study">Study</button>
+        <button class="category-pill" data-category="coding">Coding</button>
+        <button class="category-pill" data-category="project">Projects</button>
+        <button class="category-pill" data-category="image">Image</button>
+        <button class="category-pill" data-category="content">Content</button>
+        <button class="category-pill" data-category="career">Career</button>
+      </div>
+
+    </section>
+
+    <!-- CUSTOM PROMPT BUILDER -->
+    <section class="custom-template-card">
+
+      <div>
+        <h2>Create your own prompt</h2>
+        <p>Write a custom prompt and send it directly to Lumina Chatbot.</p>
+      </div>
+
+      <textarea
+        id="customPromptInput"
+        placeholder="Example: Explain Java inheritance in simple words with an example..."
+      ></textarea>
+
+      <div class="custom-actions">
+        <button type="button" class="secondary-btn" onclick="clearCustomPrompt()">
+          Clear
+        </button>
+
+        <button type="button" class="primary-btn" onclick="sendCustomPromptToChat()">
+          Use Prompt →
+        </button>
+      </div>
+
+    </section>
+
+    <!-- TEMPLATE GRID -->
+    <main class="templates-grid" id="templatesGrid"></main>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="templates.js"></script>
+
+</body>
+</html>

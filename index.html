@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/png" href="assets/crop.png" />
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+<script src="lumina-activity.js"></script>
+  <link rel="stylesheet" href="stylesheet.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+
+<body>
+
+  <!-- GUEST MODE BANNER -->
+  <div class="guest-mode-banner chatbot-guest-banner hidden" id="guestModeBanner">
+    <div class="guest-banner-text">
+      <strong>Guest Mode</strong>
+      <span>Your chats are temporary. Login to save chats, notes, images, and audio.</span>
+    </div>
+
+    <button type="button" onclick="goToAuth()">
+      Login / Sign Up
+    </button>
+  </div>
+
+  <div class="app">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar chat-sidebar" id="chatSidebar">
+
+      <button type="button" onclick="createNewChat()" class="new-chat-btn">
+        + New Chat
+      </button>
+
+      <input
+        type="text"
+        id="searchChat"
+        placeholder="Search chats..."
+        class="search-chat"
+        autocomplete="off"
+      />
+
+      <div id="chatList"></div>
+
+    </aside>
+
+    <!-- CENTER CHAT AREA -->
+    <main class="main">
+
+      <!-- MOBILE HEADER -->
+      <header class="mobile-chat-header">
+
+        <button type="button" class="mobile-home-btn" onclick="window.location.href='home.html'">
+          ← Home
+        </button>
+
+        <div class="mobile-brand">
+          <img src="assets/crop.png" alt="Lumina AI Logo" />
+          <span>Lumina AI</span>
+        </div>
+
+        <div class="mobile-header-actions">
+          <button type="button" class="mobile-options-btn" onclick="toggleMobileChatOptions()">
+            ⋯
+          </button>
+
+          <button type="button" class="mobile-sidebar-btn" onclick="toggleChatSidebar()">
+            ☰ Chats
+          </button>
+        </div>
+
+      </header>
+
+      <!-- DESKTOP HEADER -->
+      <header class="header">
+
+        <button type="button" class="back-home-btn" onclick="window.location.href='home.html'">
+          ← Home
+        </button>
+
+        <div class="chat-title">
+          <div class="chat-logo">
+            <img src="assets/crop.png" alt="Lumina AI Logo" />
+          </div>
+          <span>Lumina AI</span>
+        </div>
+
+        <div class="chat-actions">
+
+          <input
+            type="text"
+            id="messageSearchInput"
+            placeholder="Search messages..."
+            oninput="searchInsideMessages()"
+            autocomplete="off"
+          />
+
+          <button type="button" onclick="clearMessageSearch()">Clear Search</button>
+          <button type="button" onclick="renameCurrentChat()">Rename</button>
+          <button type="button" onclick="clearCurrentChat()">Clear Chat</button>
+          <button type="button" onclick="regenerateResponse()">Regenerate</button>
+          <button type="button" onclick="exportCurrentChatTxt(event)">TXT</button>
+          <button type="button" onclick="exportCurrentChatPdf(event)">PDF</button>
+
+        </div>
+
+      </header>
+
+      <!-- CHAT BOX -->
+      <section class="chat-box" id="chatBox">
+
+        <div class="chat-welcome" id="chatWelcome">
+
+          <h1>Welcome to Lumina AI</h1>
+
+          <p>
+            Your intelligent companion for ideas, answers, coding, creativity, and productivity.
+          </p>
+
+          <div class="welcome-cards">
+
+            <button type="button" onclick="sendSuggestedPrompt('Explain this topic in simple words')">
+              <div class="welcome-card-icon">💬</div>
+              <h3>Ask anything</h3>
+              <p>Get answers, explanations, and help with any topic.</p>
+              <span>→</span>
+            </button>
+
+            <button type="button" onclick="openFeaturePage('image.html')">
+              <div class="welcome-card-icon">🖼</div>
+              <h3>Create images</h3>
+              <p>Turn your ideas into beautiful AI-generated visuals.</p>
+              <span>→</span>
+            </button>
+
+            <button type="button" onclick="openFeaturePage('voice.html')">
+              <div class="welcome-card-icon">🎙</div>
+              <h3>Use voice</h3>
+              <p>Create natural-sounding speech and downloadable audio.</p>
+              <span>→</span>
+            </button>
+
+            <button type="button" onclick="sendSuggestedPrompt('Give me creative ideas for my next project')">
+              <div class="welcome-card-icon">💡</div>
+              <h3>Brainstorm ideas</h3>
+              <p>Generate creative ideas and solutions in seconds.</p>
+              <span>→</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT FEATURE SHORTCUTS -->
+      <aside class="chat-helper-panel feature-shortcuts">
+
+        <button class="helper-card feature-shortcut-card" type="button" onclick="openFeaturePage('image.html')">
+          <div class="helper-icon feature-icon image-icon purple-helper">🖼</div>
+
+          <div class="feature-info">
+            <h3>Image Generation</h3>
+            <p>Create stunning visuals from your ideas.</p>
+          </div>
+
+          <span class="feature-arrow">→</span>
+        </button>
+
+        <button class="helper-card feature-shortcut-card" type="button" onclick="openFeaturePage('voice.html')">
+          <div class="helper-icon feature-icon voice-icon green-helper">🎙</div>
+
+          <div class="feature-info">
+            <h3>Voice Studio</h3>
+            <p>Turn text into natural downloadable audio.</p>
+          </div>
+
+          <span class="feature-arrow">→</span>
+        </button>
+
+        <button class="helper-card feature-shortcut-card" type="button" onclick="triggerChatFileUpload()">
+          <div class="helper-icon feature-icon doc-icon orange-helper">📄</div>
+
+          <div class="feature-info">
+            <h3>Documents</h3>
+            <p>Upload files and ask Lumina to analyze them.</p>
+          </div>
+
+          <span class="feature-arrow">＋</span>
+        </button>
+
+        <button class="helper-card feature-shortcut-card workspace-card" type="button" onclick="openFeaturePage('home.html')">
+          <div class="helper-icon feature-icon workspace-icon purple-helper">✨</div>
+
+          <div class="feature-info">
+            <h3>Lumina Workspace</h3>
+            <p>Use chat, images, voice, search, and history together.</p>
+          </div>
+
+          <span class="feature-arrow">→</span>
+        </button>
+
+      </aside>
+
+      <!-- INPUT AREA -->
+      <div class="input-container">
+
+        <div class="composer-box">
+
+          <button
+            type="button"
+            class="composer-icon-btn add-file-btn"
+            onclick="document.getElementById('chatFileInput').click()"
+            title="Add file"
+          >
+            +
+          </button>
+
+          <input
+            type="file"
+            id="chatFileInput"
+            accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+            hidden
+          />
+
+          <textarea
+            id="messageInput"
+            class="composer-textarea"
+            placeholder="Ask Lumina anything..."
+            rows="1"
+          ></textarea>
+
+          <div class="composer-actions">
+
+            <button
+              type="button"
+              class="composer-icon-btn mic-btn"
+              onclick="startVoiceInput()"
+              title="Voice input"
+            >
+              <span>🎙</span>
+            </button>
+
+            <button
+              type="button"
+              class="composer-send-btn"
+              onclick="sendMessage()"
+              title="Send message"
+            >
+              <span>↑</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="selectedFilePreview" class="selected-file-preview"></div>
+
+    </main>
+
+  </div>
+
+  <!-- CHAT OPTIONS MODAL -->
+  <div class="modal" id="chatOptionsModal">
+    <div class="modal-box">
+
+      <button class="modal-close" type="button" onclick="closeChatOptions()">
+        ×
+      </button>
+
+      <h2>Chat Options</h2>
+
+      <button type="button" onclick="pinSelectedChat()">📌 Pin / Unpin Chat</button>
+      <button type="button" onclick="archiveSelectedChat()">📦 Archive Chat</button>
+      <button type="button" onclick="deleteSelectedChat()">🗑 Delete Chat</button>
+
+    </div>
+  </div>
+
+  <!-- GUEST LOCK MODAL -->
+  <div class="guest-lock-modal" id="guestLockModal">
+    <div class="guest-lock-box">
+
+      <button class="guest-lock-close" type="button" onclick="closeLoginRequiredModal()">
+        ×
+      </button>
+
+      <div class="guest-lock-icon">🔒</div>
+
+      <h2>Login Required</h2>
+
+      <p id="guestLockMessage">
+        Please login to use this feature.
+      </p>
+
+      <div class="guest-lock-actions">
+        <button type="button" onclick="goToAuth()">Login / Sign Up</button>
+        <button type="button" class="secondary" onclick="closeLoginRequiredModal()">Continue as Guest</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RENAME CHAT MODAL -->
+  <div id="renameModal" class="lumina-modal-overlay hidden">
+    <div class="lumina-modal">
+
+      <div class="lumina-modal-header">
+        <h3>Rename Chat</h3>
+        <button type="button" class="lumina-close-btn" onclick="closeRenameModal()">✕</button>
+      </div>
+
+      <p class="lumina-modal-subtext">
+        Enter a new name for this chat.
+      </p>
+
+      <input
+        type="text"
+        id="renameChatInput"
+        class="lumina-modal-input"
+        placeholder="Enter new chat name"
+        maxlength="80"
+      />
+
+      <div class="lumina-modal-actions">
+        <button type="button" class="lumina-secondary-btn" onclick="closeRenameModal()">
+          Cancel
+        </button>
+
+        <button type="button" class="lumina-primary-btn" onclick="confirmRenameChat()">
+          Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MOBILE CHAT OPTIONS -->
+  <div id="mobileChatOptions" class="mobile-options-panel hidden">
+
+    <button type="button" onclick="clearMessageSearch(); toggleMobileChatOptions();">
+      🔍 Clear Search
+    </button>
+
+    <button type="button" onclick="renameCurrentChat(); toggleMobileChatOptions();">
+      ✏️ Rename
+    </button>
+
+    <button type="button" onclick="clearCurrentChat(); toggleMobileChatOptions();">
+      🧹 Clear Chat
+    </button>
+
+    <button type="button" onclick="regenerateResponse(); toggleMobileChatOptions();">
+      🔄 Regenerate
+    </button>
+
+    <button type="button" onclick="exportCurrentChatTxt(); toggleMobileChatOptions();">
+      📄 Export TXT
+    </button>
+
+    <button type="button" onclick="exportCurrentChatPdf(); toggleMobileChatOptions();">
+      📕 Export PDF
+    </button>
+
+    <button type="button" class="danger-option" onclick="toggleMobileChatOptions()">
+      Close
+    </button>
+
+  </div>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div id="chatSidebarOverlay" class="sidebar-overlay" onclick="closeChatSidebar()"></div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="index.js"></script>
+
+</body>
+</html>

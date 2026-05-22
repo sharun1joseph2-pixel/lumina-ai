@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina Voice Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+<script src="lumina-activity.js"></script>
+  <link rel="stylesheet" href="voice.css">
+</head>
+
+<body>
+
+<div class="voice-page">
+
+  <nav class="voice-nav">
+    <div class="logo">✦ LUMINA VOICE STUDIO</div>
+
+    <a href="home.html" class="back-btn">← Back Home</a>
+  </nav>
+
+  <section class="voice-hero">
+    <span class="badge">AI VOICE GENERATION</span>
+
+    <h1>WORDS THAT BREATHE</h1>
+
+    <p>
+      Type your text, choose a voice, and let Lumina speak it out loud.
+    </p>
+  </section>
+
+  <section class="voice-studio">
+
+    <div class="voice-box">
+
+      <label>Enter Text</label>
+
+      <textarea 
+        id="voiceText"
+        placeholder="Example: Welcome to Lumina AI, your futuristic creative assistant."
+      ></textarea>
+
+      <label>Browser Voice</label>
+
+<select id="voiceSelect">
+  <option>Loading voices...</option>
+</select>
+
+<label>Download Voice</label>
+
+<select id="downloadVoice">
+  <option value="en-US-AriaNeural">Aria - English US Female</option>
+  <option value="en-US-GuyNeural">Guy - English US Male</option>
+  <option value="en-IN-NeerjaNeural">Neerja - English India Female</option>
+  <option value="en-IN-PrabhatNeural">Prabhat - English India Male</option>
+  <option value="hi-IN-SwaraNeural">Swara - Hindi Female</option>
+  <option value="hi-IN-MadhurNeural">Madhur - Hindi Male</option>
+</select>
+
+<label>Audio Title</label>
+
+<input 
+  type="text" 
+  id="audioTitle"
+  placeholder="Example: My Lumina Voice"
+  class="audio-title-input"
+>
+
+      <div class="control-row">
+
+        <div>
+          <label>Speed</label>
+          <input type="range" id="rate" min="0.5" max="2" value="1" step="0.1">
+          <span id="rateValue">1</span>
+        </div>
+
+        <div>
+          <label>Pitch</label>
+          <input type="range" id="pitch" min="0" max="2" value="1" step="0.1">
+          <span id="pitchValue">1</span>
+        </div>
+
+      </div>
+
+      <div class="button-row">
+        <button type="button" onclick="speakText()">▶ Speak</button>
+        <button type="button" onclick="pauseSpeech()">⏸ Pause</button>
+        <button type="button" onclick="resumeSpeech()">⏯ Resume</button>
+        <button type="button" onclick="stopSpeech()">⏹ Stop</button>
+        <button type="button" id="downloadAudioBtn" onclick="downloadAudio(event)">⬇ Download</button>
+      </div>
+
+    </div>
+
+    <div class="preview-box">
+
+      <div class="voice-orb">
+        🎙️
+      </div>
+
+      <h2>Lumina Voice Preview</h2>
+
+      <p id="statusText">
+        Ready to speak.
+      </p>
+
+      <div class="tip-box">
+        <h3>Tips</h3>
+        <ul>
+          <li>Use punctuation for natural pauses.</li>
+          <li>Lower speed makes speech clearer.</li>
+          <li>Try different system voices.</li>
+          <li>Download uses backend-generated MP3 audio.</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </section>
+<section class="audio-history-section">
+
+  <div class="history-header">
+    <h2>Audio History</h2>
+
+    <button type="button" onclick="deleteAllAudioHistory()">
+      Delete All
+    </button>
+  </div>
+
+  <input
+    type="text"
+    id="audioHistorySearch"
+    placeholder="Search audio history..."
+    oninput="searchAudioHistory()"
+    autocomplete="off"
+    class="audio-history-search"
+  >
+
+  <div id="audioHistory" class="audio-history">
+    <p>No audio generated yet.</p>
+  </div>
+
+</section>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+let voices = [];
+
+(function blockGuestAccess() {
+  const isGuest = localStorage.getItem("guest_mode") === "true";
+  const userId = localStorage.getItem("user_id");
+
+  if (isGuest || !userId) {
+    localStorage.setItem(
+      "auth_message",
+      "Please login to use Image Studio and Voice Studio."
+    );
+
+    window.location.href = "auth.html";
+  }
+})();
+
+function blockGuestAccess() {
+  const isGuest = localStorage.getItem("guest_mode") === "true";
+
+  if (isGuest) {
+    alert("Please login to use this feature.");
+    window.location.href = "auth.html";
+  }
+}
+
+blockGuestAccess();
+function loadVoices() {
+  voices = speechSynthesis.getVoices();
+
+  const voiceSelect = document.getElementById("voiceSelect");
+
+  voiceSelect.innerHTML = "";
+
+  if (voices.length === 0) {
+    const option = document.createElement("option");
+    option.textContent = "No voices found";
+    voiceSelect.appendChild(option);
+    return;
+  }
+
+  voices.forEach((voice, index) => {
+    const option = document.createElement("option");
+
+    option.value = index;
+    option.textContent = `${voice.name} (${voice.lang})`;
+
+    voiceSelect.appendChild(option);
+  });
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+
+window.onload = function () {
+  applyLuminaTheme();
+  loadVoices();
+  loadAudioHistory();
+
+  const savedText = localStorage.getItem("voice_text");
+  if (savedText) {
+    document.getElementById("voiceText").value = savedText;
+  }
+
+  document.getElementById("voiceText").addEventListener("input", function () {
+    localStorage.setItem("voice_text", this.value);
+  });
+
+  document.getElementById("rate").addEventListener("input", function () {
+    document.getElementById("rateValue").textContent = this.value;
+  });
+
+  document.getElementById("pitch").addEventListener("input", function () {
+    document.getElementById("pitchValue").textContent = this.value;
+  });
+};
+
+function speakText() {
+  const text = document.getElementById("voiceText").value.trim();
+  const voiceSelect = document.getElementById("voiceSelect");
+  const rate = document.getElementById("rate").value;
+  const pitch = document.getElementById("pitch").value;
+  const statusText = document.getElementById("statusText");
+
+  if (!text) {
+    showToast("Please enter text to speak.", "warning");
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  const selectedVoice = voices[voiceSelect.value];
+
+  if (selectedVoice) {
+    utterance.voice = selectedVoice;
+  }
+
+  utterance.rate = rate;
+  utterance.pitch = pitch;
+
+  utterance.onstart = function () {
+    statusText.textContent = "Speaking...";
+    document.querySelector(".voice-orb").classList.add("speaking");
+  };
+
+  utterance.onend = function () {
+    statusText.textContent = "Finished speaking.";
+    document.querySelector(".voice-orb").classList.remove("speaking");
+  };
+
+  utterance.onerror = function () {
+    statusText.textContent = "Something went wrong.";
+    document.querySelector(".voice-orb").classList.remove("speaking");
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+function pauseSpeech() {
+  speechSynthesis.pause();
+  document.getElementById("statusText").textContent = "Paused.";
+}
+
+function resumeSpeech() {
+  speechSynthesis.resume();
+  document.getElementById("statusText").textContent = "Speaking...";
+}
+
+function stopSpeech() {
+  speechSynthesis.cancel();
+  document.getElementById("statusText").textContent = "Stopped.";
+  document.querySelector(".voice-orb").classList.remove("speaking");
+}
+
+async function downloadAudio(event) {
+  if (event) {
+    event.preventDefault();
+  }
+
+  const text = document.getElementById("voiceText").value.trim();
+  const statusText = document.getElementById("statusText");
+  const downloadVoice = document.getElementById("downloadVoice").value;
+  const downloadBtn = document.getElementById("downloadAudioBtn");
+  const audioTitle =
+  
+    document.getElementById("audioTitle").value.trim() || "Lumina Audio";
+
+  if (!text) {
+    showToast("Please enter text to download audio.", "warning");
+    return;
+  }
+
+  setButtonLoading(downloadBtn, true, "Generating...")
+
+  try {
+    const res = await fetch(`${API}/download-audio`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text: text,
+        user_id: localStorage.getItem("user_id") || "",
+        voice: downloadVoice,
+        title: audioTitle
+      })
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("Audio API error:", errorData);
+      statusText.textContent = "Audio generation failed.";
+      return;
+    }
+
+    const blob = await res.blob();
+    const audioUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = audioUrl;
+    link.download = `${audioTitle}.mp3`;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(audioUrl);
+
+    statusText.textContent = "Audio downloaded successfully.";
+
+    loadAudioHistory();
+
+    showToast("Audio downloaded successfully.", "success"); 
+
+ } catch (err) {
+    console.error(err);
+    showToast("Audio download failed.", "error");
+    } finally {
+    setButtonLoading(downloadBtn, false);
+  }
+}
+async function loadAudioHistory() {
+  const user_id = localStorage.getItem("user_id");
+  const historyBox = document.getElementById("audioHistory");
+
+  if (!user_id) {
+    historyBox.innerHTML = "<p>Please login to view audio history.</p>";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/audio-history/${user_id}`);
+    const data = await res.json();
+
+    historyBox.innerHTML = "";
+
+    if (data.length === 0) {
+      historyBox.innerHTML = "<p>No audio generated yet.</p>";
+      return;
+    }
+
+    data.forEach(item => {
+      const fullAudioUrl = `${API}${item.audio_url}`;
+      const safeText = String(item.text || "").replace(/`/g, "\\`");
+
+      const card = document.createElement("div");
+      card.classList.add("audio-history-card");
+
+      card.innerHTML = `
+        <h3>${item.title || "Lumina Audio"}</h3>
+
+        <p>${item.text}</p>
+
+        <span class="audio-voice">${item.voice || "Default Voice"}</span>
+
+        <audio controls src="${fullAudioUrl}"></audio>
+
+        <div class="audio-actions">
+          <a href="${fullAudioUrl}" download="${item.title || "lumina_audio"}.mp3">
+            Download
+          </a>
+
+          <button type="button" onclick="copyAudioText(\`${safeText}\`)">
+            Copy
+          </button>
+
+          <button type="button" onclick="renameAudio('${item._id}')">
+            Rename
+          </button>
+
+          <button type="button" onclick="deleteAudio('${item._id}')">
+            Delete
+          </button>
+        </div>
+      `;
+
+      historyBox.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(err);
+    historyBox.innerHTML = "<p>Could not load audio history.</p>";
+  }
+}
+
+function copyAudioText(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      showToast("Text copied.", "success");
+    })
+    .catch(() => {
+      showToast("Could not copy text.", "error");
+    });
+}
+
+async function renameAudio(audio_id) {
+  const newTitle = prompt("Enter new audio title:");
+
+  if (!newTitle || !newTitle.trim()) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/rename-audio/${audio_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title: newTitle.trim()
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.detail || "Could not rename audio.");
+      return;
+    }
+
+    loadAudioHistory();
+
+  } catch (err) {
+    console.error(err);
+    alert("Rename failed.");
+  }
+}
+
+function searchAudioHistory() {
+  const query =
+    document.getElementById("audioHistorySearch").value.toLowerCase();
+
+  const cards = document.querySelectorAll(".audio-history-card");
+
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+
+    card.style.display = text.includes(query) ? "block" : "none";
+  });
+}
+
+async function deleteAllAudioHistory() {
+  const user_id = localStorage.getItem("user_id");
+
+  if (!user_id) {
+    alert("User not logged in.");
+    return;
+  }
+
+  const confirmDelete = confirm(
+    "Delete all audio history permanently?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`${API}/delete-all-audio/${user_id}`, {
+      method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.detail || "Could not delete all audio.");
+      return;
+    }
+
+    loadAudioHistory();
+
+  } catch (err) {
+    console.error(err);
+    alert("Delete all failed.");
+  }
+}
+
+async function deleteAudio(audio_id) {
+  const confirmDelete = confirm("Delete this audio from history?");
+
+  if (!confirmDelete) return;
+
+  await fetch(`${API}/delete-audio/${audio_id}`, {
+    method: "DELETE"
+  });
+
+  loadAudioHistory();
+}
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+
+  if (!container) {
+    console.log(message);
+    return;
+  }
+
+  const toast = document.createElement("div");
+
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+function setButtonLoading(button, isLoading, loadingText = "Loading...") {
+  if (!button) return;
+
+  if (isLoading) {
+    button.dataset.originalText = button.innerHTML;
+    button.innerHTML = loadingText;
+    button.disabled = true;
+    button.classList.add("loading-btn");
+  } else {
+    button.innerHTML = button.dataset.originalText || button.innerHTML;
+    button.disabled = false;
+    button.classList.remove("loading-btn");
+  }
+}
+function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme");
+  document.body.classList.remove("dark-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.add("dark-theme");
+  }
+}
+
+/* =========================================================
+   VOICE STUDIO ACTIVITY TRACKER
+   Logs activity when generated audio appears
+========================================================= */
+
+let lastLoggedVoiceAudioUrl = null;
+
+document.addEventListener("DOMContentLoaded", function () {
+  setupVoiceActivityTracker();
+});
+
+function setupVoiceActivityTracker() {
+  /*
+    This watches the Voice Studio page.
+    Whenever an <audio> tag gets a valid src, it logs activity.
+    This works even if your actual generation function has a different name.
+  */
+
+  const observer = new MutationObserver(function () {
+    detectGeneratedVoiceAudio();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["src", "href"]
+  });
+
+  detectGeneratedVoiceAudio();
+}
+
+function detectGeneratedVoiceAudio() {
+  const audioElements = document.querySelectorAll("audio");
+
+  audioElements.forEach(audio => {
+    const audioUrl = audio.currentSrc || audio.src || "";
+
+    if (!audioUrl) return;
+
+    if (audioUrl === lastLoggedVoiceAudioUrl) return;
+
+    /*
+      Avoid logging empty/default audio.
+      Only log when audio has a real generated URL/blob.
+    */
+    const looksGenerated =
+      audioUrl.startsWith("blob:") ||
+      audioUrl.startsWith("http") ||
+      audioUrl.includes(".mp3") ||
+      audioUrl.includes(".wav") ||
+      audioUrl.includes(".mpeg") ||
+      audioUrl.includes("/static/") ||
+      audioUrl.includes("/audio/");
+
+    if (!looksGenerated) return;
+
+    lastLoggedVoiceAudioUrl = audioUrl;
+
+    const voiceText = getVoiceInputTextForActivity();
+
+    if (typeof logLuminaActivity === "function") {
+      logLuminaActivity(
+        "voice",
+        "Generated AI voice",
+        voiceText
+          ? voiceText.slice(0, 140)
+          : "Voice audio created successfully."
+      );
+    } else {
+      console.warn(
+        "logLuminaActivity() not found. Make sure lumina-activity.js is loaded before voice.js."
+      );
+    }
+  });
+}
+
+function getVoiceInputTextForActivity() {
+  /*
+    This tries common textarea/input IDs.
+    If your actual textarea has a different ID, add it here.
+  */
+
+  const possibleInputs = [
+    "voiceText",
+    "voiceInput",
+    "voicePrompt",
+    "voiceTextInput",
+    "ttsText",
+    "textToSpeechInput",
+    "speechText",
+    "voiceStudioText"
+  ];
+
+  for (const id of possibleInputs) {
+    const input = document.getElementById(id);
+
+    if (input && input.value && input.value.trim()) {
+      return input.value.trim();
+    }
+  }
+
+  const textarea = document.querySelector("textarea");
+
+  if (textarea && textarea.value && textarea.value.trim()) {
+    return textarea.value.trim();
+  }
+
+  const textInput = document.querySelector("input[type='text']");
+
+  if (textInput && textInput.value && textInput.value.trim()) {
+    return textInput.value.trim();
+  }
+
+  return "";
+}
+</script>
+<div id="toastContainer" class="toast-container"></div>
+</body>
+</html>

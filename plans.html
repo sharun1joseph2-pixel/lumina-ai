@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina Plans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="plans.css">
+</head>
+
+<body>
+
+  <div class="plans-page">
+
+    <header class="plans-header">
+      <div>
+        <h1>💎 Lumina Credits</h1>
+        <p>Choose a plan and unlock more AI usage every month.</p>
+      </div>
+
+      <button type="button" onclick="window.location.href='home.html'">
+        ← Back Home
+      </button>
+    </header>
+
+    <section class="current-plan-card">
+  <div>
+    <span>Current Plan</span>
+    <h2 id="currentPlanName">Loading...</h2>
+    <p id="currentCredits">Monthly Credits: --</p>
+  </div>
+
+  <div class="daily-usage-box">
+    <div class="daily-usage-top">
+      <strong>Daily Usage</strong>
+      <span id="dailyUsageText">-- / --</span>
+    </div>
+
+    <div class="daily-usage-bar">
+      <div id="dailyUsageFill" class="daily-usage-fill"></div>
+    </div>
+
+    <small>Daily limit resets automatically every day.</small>
+  </div>
+</section>
+
+    <section class="plans-grid">
+
+      <div class="plan-card">
+        <span class="plan-badge">FREE</span>
+        <h2>₹0</h2>
+        <!-- Free -->
+        <p>3,000 credits / month</p>
+        <small class="daily-plan-limit">300 credits / day</small>
+
+        <ul>
+          <li>AI Chatbot</li>
+          <li>Limited Image Studio</li>
+          <li>Limited Voice Studio</li>
+          <li>Basic Document Analysis</li>
+        </ul>
+
+        <button type="button" data-plan-button="free" onclick="upgradePlan('free')">
+          Use Free
+        </button>
+      </div>
+
+      <div class="plan-card">
+        <span class="plan-badge">STARTER</span>
+        <h2>₹99</h2>
+        <!-- Starter -->
+<p>10,000 credits / month</p>
+<small class="daily-plan-limit">700 credits / day</small>
+
+        <ul>
+          <li>More image generations</li>
+          <li>More voice generations</li>
+          <li>Document Studio access</li>
+          <li>Saved history</li>
+        </ul>
+
+        <button type="button" data-plan-button="starter" onclick="upgradePlan('starter')">
+          Choose Starter
+        </button>
+      </div>
+
+      <div class="plan-card popular">
+        <span class="plan-badge">CREATOR</span>
+        <h2>₹199</h2>
+        <!-- Creator -->
+<p>25,000 credits / month</p>
+<small class="daily-plan-limit">1,500 credits / day</small>
+
+        <ul>
+          <li>Best for students</li>
+          <li>Image + Voice + Documents</li>
+          <li>Downloads and exports</li>
+          <li>Higher usage limits</li>
+        </ul>
+
+        <button type="button" data-plan-button="creator" onclick="upgradePlan('creator')">
+          Choose Creator
+        </button>
+      </div>
+
+      <div class="plan-card">
+        <span class="plan-badge">PRO</span>
+        <h2>₹499</h2>
+        <!-- Pro -->
+<p>75,000 credits / month</p>
+<small class="daily-plan-limit">5,000 credits / day</small>
+
+        <ul>
+          <li>Heavy AI usage</li>
+          <li>Priority features later</li>
+          <li>More storage</li>
+          <li>Best for creators</li>
+        </ul>
+
+        <button type="button" data-plan-button="pro" onclick="upgradePlan('pro')">
+          Choose Pro
+        </button>
+      </div>
+
+    </section>
+        </section>
+
+    <!-- EMAIL VERIFICATION MODAL -->
+<div id="emailVerificationModal" class="verification-modal hidden">
+  <div class="verification-box">
+
+    <button type="button" class="verification-close" onclick="closeVerificationModal()">
+      ×
+    </button>
+
+    <div class="verification-icon">📧</div>
+
+    <h2>Verify your Gmail</h2>
+
+    <p>
+      To purchase a Lumina plan, please verify your Gmail first.
+    </p>
+
+    <div class="verification-email-box">
+      <span>Verification link will be sent to:</span>
+      <strong id="verificationEmailText">your registered Gmail</strong>
+    </div>
+
+    <div class="verification-actions">
+      <button type="button" class="verify-primary-btn" onclick="resendVerificationEmail()">
+        Send Verification Link
+      </button>
+
+      <button type="button" class="verify-secondary-btn" onclick="closeVerificationModal()">
+        Maybe Later
+      </button>
+    </div>
+
+    <small>
+      We will never ask for your Gmail OTP. You only need to click the secure verification link.
+    </small>
+
+  </div>
+</div>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="plans.js"></script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumina Image Studio</title>
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+<script src="lumina-activity.js"></script>
+  <link rel="stylesheet" href="image.css" />
+  
+  <link rel="icon" type="image/png" href="assets/crop.png">
+</head>
+<body>
+  <div class="image-page">
+
+    <!-- NAVBAR -->
+    <nav class="image-nav">
+      <div class="nav-left">
+        <div class="logo-badge">✦</div>
+        <div class="logo-text">
+          <h2>Lumina Image Studio</h2>
+          <span>AI visual creation workspace</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <a href="home.html" class="back-btn">← Back Home</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="image-hero">
+      <span class="hero-badge">AI IMAGE GENERATION</span>
+      <h1>VISUALIZE THE IMPOSSIBLE</h1>
+      <p>
+        Turn your words and reference images into stunning AI-generated visuals.
+      </p>
+    </section>
+
+    <!-- MAIN STUDIO -->
+    <section class="studio-grid">
+
+      <!-- LEFT PANEL -->
+      <div class="studio-card prompt-card">
+        <div class="card-header">
+          <div>
+            <h3>Create Your Image</h3>
+            <p>Describe what you want Lumina to generate.</p>
+          </div>
+        </div>
+
+        <!-- upload row -->
+        <div class="upload-row">
+          <button class="upload-plus-btn" onclick="document.getElementById('referenceImage').click()">
+            +
+          </button>
+
+          <div class="upload-info" id="uploadInfo">
+            <span class="upload-title">Add reference image</span>
+            <span class="upload-subtitle">Optional · JPG, PNG, WEBP</span>
+          </div>
+
+          <input
+            type="file"
+            id="referenceImage"
+            accept="image/*"
+            hidden
+          />
+        </div>
+
+        <!-- file preview -->
+        <div class="file-pill hidden" id="filePill">
+          <span id="fileName">No file selected</span>
+          <button onclick="removeReferenceImage()" class="remove-file-btn">✕</button>
+        </div>
+
+        <!-- style chips -->
+        <div class="field-block">
+          <label>Style</label>
+          <div class="chip-group" id="styleGroup">
+            <button class="chip active" data-style="Realistic">Realistic</button>
+            <button class="chip" data-style="Anime">Anime</button>
+            <button class="chip" data-style="Cyberpunk">Cyberpunk</button>
+            <button class="chip" data-style="3D">3D</button>
+            <button class="chip" data-style="Logo">Logo</button>
+            <button class="chip" data-style="Watercolor">Watercolor</button>
+          </div>
+        </div>
+
+        <!-- aspect ratio chips -->
+        <div class="field-block">
+          <label>Aspect Ratio</label>
+          <div class="chip-group" id="ratioGroup">
+            <button class="chip active" data-ratio="1:1">Square</button>
+            <button class="chip" data-ratio="4:5">Portrait</button>
+            <button class="chip" data-ratio="16:9">Landscape</button>
+          </div>
+        </div>
+
+        <!-- prompt -->
+        <div class="field-block">
+          <label>Prompt</label>
+          <textarea
+            id="imagePrompt"
+            placeholder="Example: Create a cinematic cyberpunk portrait of the uploaded person with neon purple and blue lighting, highly detailed, futuristic background..."
+          ></textarea>
+        </div>
+
+        <!-- prompt tools -->
+        <div class="prompt-tools">
+          <button class="secondary-btn" onclick="enhancePrompt()">✨ Enhance Prompt</button>
+          <button class="secondary-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
+
+        <!-- generate -->
+        <button type="button" class="primary-btn" id="generateBtn" onclick="generateImage()">
+          Generate Image ✨
+        </button>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="studio-card result-card">
+        <div class="card-header">
+          <div>
+            <h3>Generated Result</h3>
+            <p>Your AI image will appear here.</p>
+          </div>
+        </div>
+
+        <div class="image-preview-box" id="imageResult">
+          <div class="empty-state">
+            <div class="empty-icon">🖼️</div>
+            <h4>No Image Yet</h4>
+            <p>Generate an image and it will appear here.</p>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="secondary-btn" onclick="downloadCurrentImage()">⬇ Download</button>
+          <button class="secondary-btn" onclick="regenerateImage()">🔁 Regenerate</button>
+          <button class="secondary-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="history-section">
+      <div class="history-header">
+        <div>
+          <h3>Image History</h3>
+          <p>Your recent generated images</p>
+        </div>
+      </div>
+
+      <div class="history-grid" id="imageHistory">
+        <div class="history-empty">
+          <p>No images generated yet.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+<script>
+
+const API = "http://127.0.0.1:8000";
+
+let selectedStyle = "Realistic";
+let selectedRatio = "1:1";
+let currentImageUrl = "";
+let lastPrompt = "";
+let selectedReferenceImage = null;
+
+function blockGuestAccess() {
+  const isGuest = localStorage.getItem("guest_mode") === "true";
+
+  if (isGuest) {
+    alert("Please login to use this feature.");
+    window.location.href = "auth.html";
+  }
+}
+
+blockGuestAccess();
+// ----------------------------
+// INIT
+// ----------------------------
+window.onload = function () {
+  if (typeof applyLuminaTheme === "function") {
+    applyLuminaTheme();
+  }
+
+  setupStyleChips();
+  setupRatioChips();
+  setupReferenceImageInput();
+  loadImageHistory();
+
+  loadPromptFromChatbot();
+};
+function loadPromptFromChatbot() {
+  const savedPrompt = localStorage.getItem("lumina_image_prompt");
+
+  if (!savedPrompt) return;
+
+  const promptBox = document.getElementById("imagePrompt");
+
+  if (promptBox) {
+    promptBox.value = savedPrompt;
+  }
+
+  localStorage.removeItem("lumina_image_prompt");
+}
+
+// ----------------------------
+// USER
+// ----------------------------
+function getUserId() {
+  return localStorage.getItem("user_id");
+}
+
+// ----------------------------
+// STYLE CHIPS
+// ----------------------------
+function setupStyleChips() {
+  const chips = document.querySelectorAll("#styleGroup .chip");
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      selectedStyle = chip.dataset.style;
+    });
+  });
+}
+
+// ----------------------------
+// RATIO CHIPS
+// ----------------------------
+function setupRatioChips() {
+  const chips = document.querySelectorAll("#ratioGroup .chip");
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      selectedRatio = chip.dataset.ratio;
+    });
+  });
+}
+
+// ----------------------------
+// FILE INPUT
+// ----------------------------
+function setupReferenceImageInput() {
+  const fileInput = document.getElementById("referenceImage");
+
+  fileInput.addEventListener("change", function () {
+    const file = fileInput.files[0];
+
+    if (!file) {
+      selectedReferenceImage = null;
+      document.getElementById("filePill").classList.add("hidden");
+      return;
+    }
+
+    selectedReferenceImage = file;
+    document.getElementById("fileName").textContent = file.name;
+    document.getElementById("filePill").classList.remove("hidden");
+  });
+}
+
+function removeReferenceImage() {
+  selectedReferenceImage = null;
+  document.getElementById("referenceImage").value = "";
+  document.getElementById("filePill").classList.add("hidden");
+}
+
+// ----------------------------
+// ENHANCE PROMPT
+// ----------------------------
+function enhancePrompt() {
+  const promptBox = document.getElementById("imagePrompt");
+  let prompt = promptBox.value.trim();
+
+  if (!prompt) {
+    alert("Please enter a prompt first.");
+    return;
+  }
+
+  prompt = `${prompt}, highly detailed, professional quality, visually striking, clean composition, sharp focus, beautiful lighting`;
+  promptBox.value = prompt;
+}
+
+// ----------------------------
+// COPY PROMPT
+// ----------------------------
+function copyPrompt() {
+  const prompt = document.getElementById("imagePrompt").value.trim();
+
+  if (!prompt) {
+    alert("No prompt to copy.");
+    return;
+  }
+
+  navigator.clipboard.writeText(prompt)
+    .then(() => alert("Prompt copied."))
+    .catch(() => alert("Could not copy prompt."));
+}
+
+// ----------------------------
+// GENERATE IMAGE
+// ----------------------------
+async function generateImage() {
+  const promptInput = document.getElementById("imagePrompt");
+  const resultBox = document.getElementById("imageResult");
+  const generateBtn = document.getElementById("generateBtn");
+
+  const prompt = promptInput ? promptInput.value.trim() : "";
+  const user_id = getUserId();
+
+  if (!resultBox) {
+    alert("imageResult box not found in image.html");
+    return false;
+  }
+
+  if (!generateBtn) {
+    alert("generateBtn not found in image.html");
+    return false;
+  }
+
+  if (!prompt && !selectedReferenceImage) {
+    showToast
+      ? showToast("Please enter a prompt or upload a reference image.", "warning")
+      : alert("Please enter a prompt or upload a reference image.");
+
+    return false;
+  }
+
+  lastPrompt = prompt;
+
+  generateBtn.disabled = true;
+  generateBtn.textContent = "Generating...";
+
+  resultBox.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">⏳</div>
+      <h4>Generating Image...</h4>
+      <p>Lumina is creating your image.</p>
+    </div>
+  `;
+
+  try {
+    const formData = new FormData();
+
+    formData.append("prompt", prompt);
+    formData.append("style", selectedStyle || "realistic");
+    formData.append("aspect_ratio", selectedRatio || "1:1");
+
+    if (user_id) {
+      formData.append("user_id", user_id);
+    }
+
+    if (selectedReferenceImage) {
+      formData.append("image", selectedReferenceImage);
+    }
+
+    const res = await fetch(`${API}/generate-image`, {
+      method: "POST",
+      body: formData
+    });
+
+    let data = {};
+
+    try {
+      data = await res.json();
+    } catch (jsonError) {
+      throw new Error("Backend did not return valid JSON.");
+    }
+
+    console.log("IMAGE GENERATION RESPONSE:", data);
+
+    if (!res.ok) {
+      const errorMessage =
+        typeof data.detail === "string"
+          ? data.detail
+          : JSON.stringify(data.detail || data.error || data, null, 2);
+
+      throw new Error(errorMessage || "Image generation failed.");
+    }
+
+    if (!data.image_url) {
+      throw new Error("No image URL received from backend.");
+    }
+
+    const fullImageUrl = data.image_url.startsWith("http")
+      ? data.image_url
+      : `${API}${data.image_url}`;
+
+    currentImageUrl = fullImageUrl;
+
+    await loadImageHistory();
+
+    showGeneratedPreview(fullImageUrl);
+
+    if (typeof showToast === "function") {
+      showToast("Image generated successfully.", "success");
+    }
+
+    /* ✅ ACTIVITY HISTORY LOG */
+    if (typeof logLuminaActivity === "function") {
+      const activityDescription = prompt
+        ? prompt.slice(0, 140)
+        : selectedReferenceImage
+          ? `Generated from reference image: ${selectedReferenceImage.name}`
+          : "Image generated successfully.";
+
+      logLuminaActivity(
+        "image",
+        "Generated an image",
+        activityDescription
+      );
+    } else {
+      console.warn(
+        "logLuminaActivity() not found. Make sure lumina-activity.js is loaded before image.js."
+      );
+    }
+
+  } catch (err) {
+    console.error("IMAGE GENERATION ERROR:", err);
+
+    resultBox.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <h4>Generation Failed</h4>
+        <p>${escapeHTML ? escapeHTML(err.message || "Image generation failed.") : err.message || "Image generation failed."}</p>
+      </div>
+    `;
+
+    if (typeof showToast === "function") {
+      showToast("Image generation failed.", "error");
+    }
+
+  } finally {
+    generateBtn.disabled = false;
+    generateBtn.textContent = "Generate Image ✨";
+  }
+
+  return false;
+}
+
+function showGeneratedPreview(imageUrl) {
+  const resultBox = document.getElementById("imageResult");
+
+  if (!resultBox) {
+    console.error("imageResult box not found.");
+    return;
+  }
+
+  const imageUrlWithCacheBust = `${imageUrl}?t=${Date.now()}`;
+
+  resultBox.innerHTML = "";
+
+  const img = document.createElement("img");
+  img.src = imageUrlWithCacheBust;
+  img.alt = "Generated Image";
+  img.className = "generated-img";
+
+  img.onload = function () {
+    console.log("Preview image loaded:", imageUrlWithCacheBust);
+  };
+
+  img.onerror = function () {
+    console.error("Preview image failed:", imageUrlWithCacheBust);
+
+    resultBox.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <h4>Preview Failed</h4>
+        <p>The image was generated but could not be shown here.</p>
+      </div>
+    `;
+  };
+
+  resultBox.appendChild(img);
+}
+// ----------------------------
+// REGENERATE IMAGE
+// ----------------------------
+function regenerateImage() {
+  if (!lastPrompt && !selectedReferenceImage) {
+    alert("Nothing to regenerate.");
+    return;
+  }
+
+  generateImage();
+}
+
+// ----------------------------
+// DOWNLOAD IMAGE
+// ----------------------------
+function downloadCurrentImage() {
+  if (!currentImageUrl) {
+    alert("No image available to download.");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = currentImageUrl;
+  link.download = "lumina-image.jpg";
+  link.target = "_blank";
+  link.click();
+}
+
+// ----------------------------
+// HISTORY
+// ----------------------------
+async function loadImageHistory() {
+  const user_id = getUserId();
+  const historyBox = document.getElementById("imageHistory");
+
+  if (!user_id) {
+    historyBox.innerHTML = `
+      <div class="history-empty">
+        <p>Please login to view image history.</p>
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/image-history/${user_id}`);
+    if (!res.ok) throw new Error("Could not load history.");
+
+    const data = await res.json();
+
+    historyBox.innerHTML = "";
+
+    if (!data.length) {
+      historyBox.innerHTML = `
+        <div class="history-empty">
+          <p>No images generated yet.</p>
+        </div>
+      `;
+      return;
+    }
+
+    data.forEach(item => {
+      const fullImageUrl = item.image_url.startsWith("http")
+        ? item.image_url
+        : `${API}${item.image_url}`;
+
+      const card = document.createElement("div");
+      card.className = "history-card";
+
+      card.innerHTML = `
+        <img src="${fullImageUrl}" alt="Generated Image" />
+        <div class="history-card-content">
+          <p>${item.prompt || "Generated image"}</p>
+          <div class="history-card-actions">
+            <a href="${fullImageUrl}" download target="_blank">Download</a>
+            <button onclick="deleteImage('${item._id}')">Delete</button>
+          </div>
+        </div>
+      `;
+
+      historyBox.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(err);
+    historyBox.innerHTML = `
+      <div class="history-empty">
+        <p>Could not load image history.</p>
+      </div>
+    `;
+  }
+}
+
+// ----------------------------
+// DELETE IMAGE
+// ----------------------------
+async function deleteImage(image_id) {
+  const yes = confirm("Delete this image from history?");
+  if (!yes) return;
+
+  try {
+    await fetch(`${API}/delete-image/${image_id}`, {
+      method: "DELETE"
+    });
+
+    loadImageHistory();
+  } catch (err) {
+    console.error(err);
+    alert("Could not delete image.");
+  }
+}
+function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme", "dark-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.add("dark-theme");
+  }
+}
+</script>
+<div id="toastContainer" class="toast-container"></div>
+</body>
+</html>

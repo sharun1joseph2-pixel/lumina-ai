@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+      document.documentElement.classList.remove("light-theme", "dark-theme");
+      document.documentElement.classList.add(savedTheme + "-theme");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.remove("light-theme", "dark-theme");
+        document.body.classList.add(savedTheme + "-theme");
+      });
+    })();
+  </script>
+
+  <link rel="stylesheet" href="settings.css" />
+</head>
+
+<body>
+
+  <div class="settings-page">
+
+    <header class="settings-header">
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div>
+          <h1>Settings</h1>
+          <p>Control your Lumina workspace, preferences, credits, and privacy.</p>
+        </div>
+      </div>
+
+      <button class="back-btn" onclick="window.location.href='home.html'">
+        ← Back to Home
+      </button>
+    </header>
+
+    <main class="settings-layout">
+
+      <!-- SETTINGS NAV -->
+      <aside class="settings-tabs">
+
+        <button class="settings-tab active" data-tab="profile">
+          👤 Profile
+        </button>
+
+        <button class="settings-tab" data-tab="appearance">
+          🎨 Appearance
+        </button>
+
+        <button class="settings-tab" data-tab="ai">
+          ✨ AI Preferences
+        </button>
+
+        <button class="settings-tab" data-tab="credits">
+          💎 Credits & Plan
+        </button>
+
+        <button class="settings-tab" data-tab="privacy">
+          🔐 Privacy & Security
+        </button>
+
+        <button class="settings-tab" data-tab="storage">
+          🗂 Data & Storage
+        </button>
+
+      </aside>
+
+      <!-- SETTINGS CONTENT -->
+      <section class="settings-content">
+
+        <!-- PROFILE -->
+        <div class="settings-panel active" id="profile">
+
+          <div class="panel-heading">
+            <h2>Profile</h2>
+            <p>Manage your personal Lumina profile.</p>
+          </div>
+
+          <div class="settings-card profile-card">
+
+            <div class="profile-avatar" id="settingsAvatar">
+              SJ
+            </div>
+
+            <div class="form-grid">
+
+              <label>
+                Full Name
+                <input type="text" id="fullNameInput" placeholder="Enter full name" />
+              </label>
+
+              <label>
+                Username
+                <input type="text" id="usernameInput" placeholder="Enter username" />
+              </label>
+
+              <label>
+                Email
+                <input type="email" id="emailInput" placeholder="Email address" disabled />
+              </label>
+
+              <label>
+                Occupation
+                <input type="text" id="occupationInput" placeholder="Student, Developer, Designer..." />
+              </label>
+
+              <label class="full-width">
+                Bio
+                <textarea id="bioInput" placeholder="Write something about yourself..."></textarea>
+              </label>
+
+            </div>
+
+            <button class="primary-btn" onclick="saveProfileSettings()">
+              Save Profile
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- APPEARANCE -->
+        <div class="settings-panel" id="appearance">
+
+          <div class="panel-heading">
+            <h2>Appearance</h2>
+            <p>Customize Lumina’s theme and visual style.</p>
+          </div>
+
+          <div class="settings-card">
+
+            <div class="setting-row">
+              <div>
+                <h3>Theme</h3>
+                <p>Choose your preferred interface mode.</p>
+              </div>
+
+              <div class="segmented-control">
+                <button id="lightThemeBtn" onclick="setLuminaTheme('light')">Light</button>
+                <button id="darkThemeBtn" onclick="setLuminaTheme('dark')">Dark</button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <h3>Accent Color</h3>
+                <p>Choose the main color used across buttons and highlights.</p>
+              </div>
+
+              <div class="color-options">
+                <button class="color-dot blue" onclick="setAccentColor('blue')"></button>
+                <button class="color-dot purple" onclick="setAccentColor('purple')"></button>
+                <button class="color-dot pink" onclick="setAccentColor('pink')"></button>
+                <button class="color-dot cyan" onclick="setAccentColor('cyan')"></button>
+                <button class="color-dot green" onclick="setAccentColor('green')"></button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <h3>Font Size</h3>
+                <p>Adjust text size for better readability.</p>
+              </div>
+
+              <select id="fontSizeSelect" onchange="setFontSize(this.value)">
+                <option value="small">Small</option>
+                <option value="normal">Normal</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- AI PREFERENCES -->
+        <div class="settings-panel" id="ai">
+
+          <div class="panel-heading">
+            <h2>AI Preferences</h2>
+            <p>Control how Lumina responds to you.</p>
+          </div>
+
+          <div class="settings-card">
+
+            <div class="setting-row">
+              <div>
+                <h3>Response Style</h3>
+                <p>Choose how Lumina should format answers.</p>
+              </div>
+
+              <select id="responseStyleSelect">
+                <option value="simple">Simple</option>
+                <option value="detailed">Detailed</option>
+                <option value="exam">Exam Style</option>
+                <option value="professional">Professional</option>
+                <option value="creative">Creative</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <h3>Answer Length</h3>
+                <p>Default response length for chatbot replies.</p>
+              </div>
+
+              <select id="answerLengthSelect">
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="detailed">Detailed</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <h3>Creativity Level</h3>
+                <p>Higher creativity gives more imaginative answers.</p>
+              </div>
+
+              <input type="range" id="creativityRange" min="0" max="100" value="50" />
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <h3>Show typing animation</h3>
+                <p>Enable smooth streaming text in chatbot.</p>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" id="typingAnimationToggle" checked />
+                <span></span>
+              </label>
+            </div>
+
+            <button class="primary-btn" onclick="saveAIPreferences()">
+              Save AI Preferences
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- CREDITS -->
+        <div class="settings-panel" id="credits">
+
+          <div class="panel-heading">
+            <h2>Credits & Plan</h2>
+            <p>Track your usage and upgrade when needed.</p>
+          </div>
+
+          <div class="credits-grid">
+
+            <div class="credit-card">
+              <span>Current Plan</span>
+              <h3 id="settingsPlanName">Free Plan</h3>
+            </div>
+
+            <div class="credit-card">
+              <span>Monthly Credits</span>
+              <h3 id="settingsMonthlyCredits">0 / 3000</h3>
+            </div>
+
+            <div class="credit-card">
+              <span>Daily Usage</span>
+              <h3 id="settingsDailyCredits">0 / 300</h3>
+            </div>
+
+          </div>
+
+          <div class="settings-card">
+
+            <div class="setting-row">
+              <div>
+                <h3>Low Credit Warning</h3>
+                <p>Notify when credits drop below 20%.</p>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" id="lowCreditToggle" checked />
+                <span></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <h3>High Credit Confirmation</h3>
+                <p>Ask before using high-cost tools like images or voice.</p>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" id="highCreditToggle" checked />
+                <span></span>
+              </label>
+            </div>
+
+            <button class="primary-btn" onclick="window.location.href='plans.html'">
+              Upgrade Plan
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- PRIVACY -->
+        <div class="settings-panel" id="privacy">
+
+          <div class="panel-heading">
+            <h2>Privacy & Security</h2>
+            <p>Protect your account and control your data.</p>
+          </div>
+
+          <div class="settings-card">
+
+            <label>
+              Current Password
+              <input type="password" id="currentPasswordInput" placeholder="Current password" />
+            </label>
+
+            <label>
+              New Password
+              <input type="password" id="newPasswordInput" placeholder="New password" />
+            </label>
+
+            <button class="primary-btn" onclick="changePassword()">
+              Change Password
+            </button>
+
+          </div>
+
+          <div class="danger-card">
+
+            <h3>Danger Zone</h3>
+            <p>These actions cannot be undone.</p>
+
+            <div class="danger-actions">
+              <button onclick="logoutAllDevices()">Logout from all devices</button>
+              <button onclick="deleteAccount()">Delete Account</button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- STORAGE -->
+        <div class="settings-panel" id="storage">
+
+          <div class="panel-heading">
+            <h2>Data & Storage</h2>
+            <p>Manage saved chats, notes, downloads, and generated assets.</p>
+          </div>
+
+          <div class="storage-grid">
+
+            <div class="storage-card">
+              <h3>Chats</h3>
+              <p>Clear all saved chat history.</p>
+              <button onclick="clearAllChats()">Clear Chats</button>
+            </div>
+
+            <div class="storage-card">
+              <h3>Notes</h3>
+              <p>Delete saved AI notes.</p>
+              <button onclick="clearAllNotes()">Clear Notes</button>
+            </div>
+
+            <div class="storage-card">
+              <h3>Downloads</h3>
+              <p>Clear generated files history.</p>
+              <button onclick="clearDownloads()">Clear Downloads</button>
+            </div>
+
+            <div class="storage-card">
+              <h3>Export Data</h3>
+              <p>Download your Lumina account data.</p>
+              <button onclick="exportUserData()">Export Data</button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="settings.js"></script>
+
+</body>
+</html>

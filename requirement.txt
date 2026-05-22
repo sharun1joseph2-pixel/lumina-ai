@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pymongo
+python-dotenv
+python-multipart
+requests
+edge-tts
+google-genai
+google-auth
+pypdf
+PyPDF2
+python-docx
+reportlab
+bcrypt
+passlib
+pyjwt

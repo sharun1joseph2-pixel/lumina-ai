@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lumina Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+<script src="lumina-activity.js"></script>
+  <link rel="stylesheet" href="notes.css" />
+</head>
+
+<body>
+
+  <div class="notes-page">
+
+    <nav class="notes-nav">
+      <div class="nav-left">
+        <div class="logo-icon">⭐</div>
+        <div>
+          <h2>Lumina Notes</h2>
+          <p>Saved AI responses, study notes, code help, and prompts</p>
+        </div>
+      </div>
+
+      <a href="home.html" class="back-btn">← Back Home</a>
+    </nav>
+
+    <section class="notes-hero">
+      <span>STUDY MODE</span>
+      <h1>Your Saved Knowledge</h1>
+      <p>Search, copy, download, and manage important AI responses saved from Lumina Chat.</p>
+    </section>
+
+    <section class="notes-controls">
+      <input 
+        type="text" 
+        id="notesSearch" 
+        placeholder="Search notes..."
+        oninput="filterNotes()"
+      />
+
+      <select id="categoryFilter" onchange="filterNotes()">
+        <option value="All">All Categories</option>
+        <option value="General">General</option>
+        <option value="Study">Study</option>
+        <option value="Code">Code</option>
+        <option value="Image Prompt">Image Prompt</option>
+      </select>
+
+      <button class="danger-btn" onclick="deleteAllNotes()">
+        Delete All
+      </button>
+    </section>
+
+    <section class="notes-stats">
+      <div class="stat-card">
+        <h3 id="totalNotes">0</h3>
+        <p>Total Notes</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="studyNotes">0</h3>
+        <p>Study</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="codeNotes">0</h3>
+        <p>Code</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="promptNotes">0</h3>
+        <p>Prompts</p>
+      </div>
+    </section>
+
+    <section class="notes-grid" id="notesGrid">
+      <div class="empty-state">Loading notes...</div>
+    </section>
+
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="notes.js"></script>
+</body>
+</html>

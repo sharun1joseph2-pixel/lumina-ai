@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lumina Global Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/crop.png">
+  <script>
+  (function () {
+    const savedTheme = localStorage.getItem("lumina_theme") || "dark";
+
+    document.documentElement.classList.remove("light-theme", "dark-theme");
+    document.documentElement.classList.add(savedTheme + "-theme");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.remove("light-theme", "dark-theme");
+      document.body.classList.add(savedTheme + "-theme");
+    });
+  })();
+</script>
+  <link rel="stylesheet" href="search.css">
+</head>
+
+<body>
+
+<div class="search-page">
+
+  <nav class="search-nav">
+    <div class="logo">✦ LUMINA SEARCH</div>
+
+    <a href="home.html" class="back-btn">← Back Home</a>
+  </nav>
+
+  <section class="search-hero">
+    <span class="badge">APP-WIDE SEARCH</span>
+
+    <h1>SEARCH EVERYTHING</h1>
+
+    <p>
+      Find chats, messages, generated images, audio files, and archived conversations.
+    </p>
+  </section>
+
+  <section class="search-box-section">
+
+    <div class="search-box">
+      <input 
+        type="text"
+        id="globalSearchInput"
+        placeholder="Search Lumina..."
+        autocomplete="off"
+        oninput="runGlobalSearch()"
+      >
+
+      <button onclick="runGlobalSearch()">
+        Search
+      </button>
+    </div>
+
+  </section>
+
+  <section class="results-section" id="resultsSection">
+
+    <div class="empty-state">
+      <h2>Start searching</h2>
+      <p>Type a keyword to search across your Lumina activity.</p>
+    </div>
+
+  </section>
+
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+let searchTimer = null;
+
+function getUserId() {
+  return localStorage.getItem("user_id");
+}
+
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+
+  if (!container) {
+    console.log(message);
+    return;
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
+function escapeHTML(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function applyLuminaTheme() {
+  const theme = localStorage.getItem("lumina_theme") || "light";
+
+  document.body.classList.remove("light-theme");
+  document.body.classList.remove("dark-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.add("dark-theme");
+  }
+}
+
+function runGlobalSearch() {
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(() => {
+    performSearch();
+  }, 350);
+}
+
+async function performSearch() {
+  const user_id = getUserId();
+  const query = document.getElementById("globalSearchInput").value.trim();
+  const resultsSection = document.getElementById("resultsSection");
+
+  if (!user_id) {
+    window.location.href = "auth.html";
+    return;
+  }
+
+  if (!query) {
+    resultsSection.innerHTML = `
+      <div class="empty-state">
+        <h2>Start searching</h2>
+        <p>Type a keyword to search across your Lumina activity.</p>
+      </div>
+    `;
+    return;
+  }
+
+  resultsSection.innerHTML = `
+    <div class="empty-state">
+      <h2>Searching...</h2>
+      <p>Looking through your Lumina data.</p>
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`${API}/global-search/${user_id}?q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.detail || "Search failed.", "error");
+      return;
+    }
+
+    renderResults(data, query);
+
+  } catch (err) {
+    console.error(err);
+    showToast("Search failed.", "error");
+  }
+}
+
+function highlightText(text, query) {
+  const safeText = escapeHTML(text);
+  const safeQuery = escapeHTML(query);
+
+  if (!safeQuery) return safeText;
+
+  const regex = new RegExp(`(${safeQuery})`, "gi");
+
+  return safeText.replace(regex, "<mark>$1</mark>");
+}
+
+function renderResults(data, query) {
+  const resultsSection = document.getElementById("resultsSection");
+
+  const total =
+    data.chats.length +
+    data.messages.length +
+    data.images.length +
+    data.audio.length +
+    data.archives.length;
+
+  if (total === 0) {
+    resultsSection.innerHTML = `
+      <div class="empty-state">
+        <h2>No results found</h2>
+        <p>Try a different keyword.</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = "";
+
+  if (data.chats.length > 0) {
+    html += `
+      <div class="result-group">
+        <h2>💬 Chats</h2>
+        ${data.chats.map(chat => `
+          <div class="result-card">
+            <div>
+              <h3>${highlightText(chat.title || "Untitled Chat", query)}</h3>
+              <p>Chat conversation</p>
+            </div>
+
+            <button onclick="openChat('${chat._id}')">
+              Open
+            </button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  if (data.messages.length > 0) {
+    html += `
+      <div class="result-group">
+        <h2>🧠 Messages</h2>
+        ${data.messages.map(msg => `
+          <div class="result-card">
+            <div>
+              <h3>User message</h3>
+              <p>${highlightText(msg.message || "", query)}</p>
+              <p class="small-result">${highlightText(msg.response || "", query)}</p>
+            </div>
+
+            <button onclick="openChat('${msg.chat_id}')">
+              Open
+            </button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  if (data.images.length > 0) {
+    html += `
+      <div class="result-group">
+        <h2>🖼 Images</h2>
+
+        <div class="media-grid">
+          ${data.images.map(img => `
+            <div class="media-card">
+              <img src="${API}${img.image_url}" alt="Image result">
+
+              <p>${highlightText(img.prompt || "", query)}</p>
+
+              <a href="image.html">
+                Open Image Studio
+              </a>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  if (data.audio.length > 0) {
+    html += `
+      <div class="result-group">
+        <h2>🎙 Audio</h2>
+        ${data.audio.map(audio => `
+          <div class="result-card audio-result">
+            <div>
+              <h3>${highlightText(audio.title || "Lumina Audio", query)}</h3>
+              <p>${highlightText(audio.text || "", query)}</p>
+              <audio controls src="${API}${audio.audio_url}"></audio>
+            </div>
+
+            <a href="${API}${audio.audio_url}" download="${escapeHTML(audio.title || "lumina_audio")}.mp3">
+              Download
+            </a>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  if (data.archives.length > 0) {
+    html += `
+      <div class="result-group">
+        <h2>📦 Archived Chats</h2>
+        ${data.archives.map(chat => `
+          <div class="result-card">
+            <div>
+              <h3>${highlightText(chat.title || "Untitled Archive", query)}</h3>
+              <p>Archived conversation</p>
+            </div>
+
+            <button onclick="openArchivedChat('${chat._id}')">
+              Open
+            </button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  resultsSection.innerHTML = html;
+}
+
+function openChat(chatId) {
+  localStorage.setItem("open_chat_id", chatId);
+  window.location.href = "index.html";
+}
+
+function openArchivedChat(chatId) {
+  localStorage.setItem("open_archived_chat", chatId);
+  window.location.href = "index.html";
+}
+
+window.onload = function () {
+  applyLuminaTheme();
+};
+</script>
+
+</body>
+</html>
