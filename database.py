@@ -14,7 +14,7 @@ MONGO_URL = os.getenv("MONGO_URL")
 
 client = MongoClient(
     MONGO_URL,
-    server_api=ServerApi("2"),
+    server_api=ServerApi("1"),
     tls=True,
     tlsCAFile=certifi.where(),
     serverSelectionTimeoutMS=30000
