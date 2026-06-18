@@ -28,7 +28,7 @@
   <nav class="search-nav">
     <div class="logo">✦ LUMINA SEARCH</div>
 
-    <a href="home.html" class="back-btn">← Back Home</a>
+    <a href="/home" class="back-btn">← Back Home</a>
   </nav>
 
   <section class="search-hero">
@@ -73,7 +73,7 @@
 <div id="toastContainer" class="toast-container"></div>
 
 <script>
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let searchTimer = null;
 
@@ -136,7 +136,7 @@ async function performSearch() {
   const resultsSection = document.getElementById("resultsSection");
 
   if (!user_id) {
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
     return;
   }
 
@@ -260,7 +260,7 @@ function renderResults(data, query) {
 
               <p>${highlightText(img.prompt || "", query)}</p>
 
-              <a href="image.html">
+              <a href="/image">
                 Open Image Studio
               </a>
             </div>
@@ -316,12 +316,12 @@ function renderResults(data, query) {
 
 function openChat(chatId) {
   localStorage.setItem("open_chat_id", chatId);
-  window.location.href = "index.html";
+  window.location.href = "/index";
 }
 
 function openArchivedChat(chatId) {
   localStorage.setItem("open_archived_chat", chatId);
-  window.location.href = "index.html";
+  window.location.href = "/index";
 }
 
 window.onload = function () {

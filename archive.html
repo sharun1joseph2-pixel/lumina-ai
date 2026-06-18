@@ -30,9 +30,8 @@
   <nav class="archive-nav">
     <div class="logo">✦ LUMINA ARCHIVE</div>
 
-    <a href="home.html" class="back-btn">← Back Home</a>
+    <a href="/home" class="back-btn">← Back Home</a>
   </nav>
-
   <section class="archive-hero">
     <span class="badge">CHAT ARCHIVE</span>
 
@@ -68,7 +67,7 @@
 </div>
 
 <script>
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 function getUserId() {
   return localStorage.getItem("user_id");
@@ -79,7 +78,7 @@ async function loadArchivedChats() {
   const list = document.getElementById("archivedChatList");
 
   if (!user_id) {
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
     return;
   }
 
@@ -143,7 +142,7 @@ async function loadArchivedChats() {
 
 function openArchivedChat(chatId) {
   localStorage.setItem("open_archived_chat", chatId);
-  window.location.href = "index.html";
+  window.location.href = "/index";
 }
 
 async function restoreChat(chatId) {

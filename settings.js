@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 document.addEventListener("DOMContentLoaded", function () {
   setupSettingsTabs();
@@ -312,7 +312,7 @@ async function changePassword() {
 
 function logoutAllDevices() {
   localStorage.clear();
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 async function deleteAccount() {
@@ -337,7 +337,7 @@ async function deleteAccount() {
     }
 
     localStorage.clear();
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
 
   } catch (err) {
     console.error("DELETE ACCOUNT ERROR:", err);

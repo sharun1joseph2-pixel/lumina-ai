@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 /* =========================
    BASIC HELPERS
@@ -85,7 +85,7 @@ function blockGuestAccess() {
 
   if (isGuestUser() || !userId) {
     alert("Please login to use Document Studio.");
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
   }
 }
 
@@ -136,7 +136,7 @@ async function analyzeDocument(event) {
   const resultBox = document.getElementById("analysisResult");
 
   if (!resultBox) {
-    alert("analysisResult box not found in documents.html");
+    alert("analysisResult box not found in /documents");
     return false;
   }
 

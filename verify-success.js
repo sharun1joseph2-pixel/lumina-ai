@@ -54,9 +54,9 @@ function renderVerificationResult() {
 }
 
 function goToHome() {
-  window.location.href = "home.html";
+  window.location.href = "/home";
 }
 
 function goToPlans() {
-  window.location.href = "plans.html";
+  window.location.href = "/plans";
 }

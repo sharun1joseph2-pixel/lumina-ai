@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let currentChatId = null;
 let selectedChatId = null;
@@ -92,7 +92,7 @@ function goToAuth() {
   localStorage.removeItem("username");
   localStorage.removeItem("email");
 
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 function goToLogin() {
@@ -134,7 +134,7 @@ function setupGuestModeBanner() {
 ========================= */
 
 if (!getUserId() && !isGuestUser()) {
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 /* =========================
@@ -160,14 +160,14 @@ function getWelcomeHTML() {
           <span>→</span>
         </button>
 
-        <button type="button" onclick="openFeaturePage('image.html')">
+        <button type="button" onclick="openFeaturePage('/image')">
           <div class="welcome-card-icon">🖼</div>
           <h3>Create images</h3>
           <p>Turn your ideas into beautiful AI-generated visuals.</p>
           <span>→</span>
         </button>
 
-        <button type="button" onclick="openFeaturePage('voice.html')">
+        <button type="button" onclick="openFeaturePage('/voice')">
           <div class="welcome-card-icon">🎙</div>
           <h3>Use voice</h3>
           <p>Create natural-sounding speech and downloadable audio.</p>
@@ -997,7 +997,7 @@ function openRenameModal(chatId = null, currentTitle = "") {
   const input = document.getElementById("renameChatInput");
 
   if (!modal || !input) {
-    showToast("Rename modal not found in index.html.", "error");
+    showToast("Rename modal not found in /index.", "error");
     console.error("Missing renameModal or renameChatInput");
     return;
   }
@@ -1833,7 +1833,7 @@ function sendPromptToImageStudio(text) {
   showToast("Prompt sent to Image Studio.", "success");
 
   setTimeout(() => {
-    window.location.href = "image.html";
+    window.location.href = "/imagel";
   }, 500);
 }
 
@@ -1842,7 +1842,7 @@ function sendPromptToImageStudio(text) {
 ========================= */
 
 function openFeaturePage(page) {
-  if (isGuestUser() && (page === "image.html" || page === "voice.html")) {
+  if (isGuestUser() && (page === "/image" || page === "/voice")) {
     showLoginRequiredModal("Please login to use Image Studio and Voice Studio.");
     return;
   }
@@ -1964,7 +1964,7 @@ function signOut() {
     localStorage.setItem("lumina_theme", savedTheme);
   }
 
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 /* =========================

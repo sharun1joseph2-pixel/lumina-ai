@@ -36,7 +36,7 @@
       </div>
 
       <div class="nav-right">
-        <a href="home.html" class="back-btn">← Back Home</a>
+        <a href="/home" class="back-btn">← Back Home</a>
       </div>
     </nav>
 
@@ -174,7 +174,7 @@
   </div>
 <script>
 
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let selectedStyle = "Realistic";
 let selectedRatio = "1:1";
@@ -187,7 +187,7 @@ function blockGuestAccess() {
 
   if (isGuest) {
     alert("Please login to use this feature.");
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
   }
 }
 
@@ -327,12 +327,12 @@ async function generateImage() {
   const user_id = getUserId();
 
   if (!resultBox) {
-    alert("imageResult box not found in image.html");
+    alert("imageResult box not found in /image");
     return false;
   }
 
   if (!generateBtn) {
-    alert("generateBtn not found in image.html");
+    alert("generateBtn not found in /image");
     return false;
   }
 

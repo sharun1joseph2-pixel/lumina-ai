@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 const PLAN_LABELS = {
   free: "Free",
@@ -175,7 +175,7 @@ async function upgradePlan(plan) {
     showToast("Please login to upgrade your Lumina plan.", "warning");
 
     setTimeout(() => {
-      window.location.href = "auth.html";
+      window.location.href = "/auth";
     }, 900);
 
     return;

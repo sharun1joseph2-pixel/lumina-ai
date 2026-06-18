@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 /* SWITCH FORMS */
 function showLogin() {
@@ -74,7 +74,7 @@ async function login() {
   localStorage.setItem("username", data.username || "");
   localStorage.setItem("profile_photo", data.profile_photo || "");
 
-  window.location.href = "home.html";
+  window.location.href = "/home";
 }
 /* SIGNUP */
 async function signup() {
@@ -114,7 +114,7 @@ const password = document.getElementById("signupPassword").value;
   localStorage.setItem("email", data.email);
   localStorage.setItem("username", data.username);
 
-  window.location.href = "home.html";
+  window.location.href = "/home";
 }
 
 async function handleGoogleLogin(response) {
@@ -152,7 +152,7 @@ async function handleGoogleLogin(response) {
     localStorage.setItem("username", data.username || "");
     localStorage.setItem("profile_photo", data.profile_photo || "");
 
-    window.location.href = "home.html";
+    window.location.href = "/home";
 
   } catch (err) {
     console.error("GOOGLE LOGIN FRONTEND ERROR:", err);
@@ -230,7 +230,7 @@ function continueAsGuest() {
   localStorage.setItem("username", "guest");
   localStorage.setItem("email", "");
 
-  window.location.href = "home.html";
+  window.location.href = "/home";
 }
 
 function handleAuthResponsiveState() {

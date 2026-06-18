@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let allImages = [];
 let allAudio = [];
@@ -31,7 +31,7 @@ async function loadDownloads() {
   if (!user_id) {
     showToast("Please login first.", "error");
     setTimeout(() => {
-      window.location.href = "auth.html";
+      window.location.href = "/auth";
     }, 800);
     return;
   }

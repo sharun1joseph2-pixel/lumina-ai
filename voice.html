@@ -29,7 +29,7 @@
   <nav class="voice-nav">
     <div class="logo">✦ LUMINA VOICE STUDIO</div>
 
-    <a href="home.html" class="back-btn">← Back Home</a>
+    <a href="/home" class="back-btn">← Back Home</a>
   </nav>
 
   <section class="voice-hero">
@@ -157,7 +157,7 @@
 </div>
 
 <script>
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let voices = [];
 
@@ -171,7 +171,7 @@ let voices = [];
       "Please login to use Image Studio and Voice Studio."
     );
 
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
   }
 })();
 
@@ -180,7 +180,7 @@ function blockGuestAccess() {
 
   if (isGuest) {
     alert("Please login to use this feature.");
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
   }
 }
 

@@ -238,7 +238,7 @@ function useTemplate(templateId) {
   showToast("Template sent to chatbot.", "success");
 
   setTimeout(() => {
-    window.location.href = "index.html";
+    window.location.href = "/index";
   }, 400);
 }
 
@@ -276,7 +276,7 @@ function sendCustomPromptToChat() {
   showToast("Custom prompt sent to chatbot.", "success");
 
   setTimeout(() => {
-    window.location.href = "index.html";
+    window.location.href = "/index";
   }, 400);
 }
 

@@ -40,8 +40,8 @@
     </div>
 
     <div class="nav-actions" id="landingNavActions">
-      <a href="auth.html" class="login-btn">Login</a>
-      <a href="auth.html" class="signup-btn">Sign Up</a>
+      <a href="/auth" class="login-btn">Login</a>
+      <a href="/auth" class="signup-btn">Sign Up</a>
     </div>
   </nav>
 
@@ -63,7 +63,7 @@
       </p>
 
       <div class="hero-actions" id="landingHeroActions">
-        <a href="auth.html" class="primary-cta">
+        <a href="/auth" class="primary-cta">
           Get Started Free →
         </a>
 
@@ -504,7 +504,7 @@
     </p>
 
     <div class="final-actions" id="landingFinalActions">
-      <a href="auth.html" class="primary-cta">
+      <a href="/auth" class="primary-cta">
         Login / Sign Up
       </a>
 
@@ -584,15 +584,15 @@
       localStorage.setItem("username", "guest");
       localStorage.setItem("email", "");
 
-      window.location.href = "home.html";
+      window.location.href = "/home";
     }
 
     function goToDashboard() {
-      window.location.href = "home.html";
+      window.location.href = "/home";
     }
 
     function goToChatbot() {
-      window.location.href = "index.html";
+      window.location.href = "/index";
     }
 
     function logoutFromLanding() {
@@ -612,7 +612,7 @@
         localStorage.setItem("lumina_theme", savedTheme);
       }
 
-      window.location.href = "landing.html";
+      window.location.href = "/landing";
     }
 
     function openLandingTool(toolName) {
@@ -620,13 +620,13 @@
       const guest = isGuestUser();
 
       const pages = {
-        home: "home.html",
-        chat: "index.html",
-        image: "image.html",
-        voice: "voice.html",
-        documents: "documents.html",
-        notes: "notes.html",
-        downloads: "downloads.html"
+        home: "/home",
+        chat: "/index",
+        image: "/image",
+        voice: "/voice",
+        documents: "/documents",
+        notes: "/notes",
+        downloads: "/downloads"
       };
 
       if (!pages[toolName]) {
@@ -641,7 +641,7 @@
         );
 
         setTimeout(() => {
-          window.location.href = "auth.html";
+          window.location.href = "/auth";
         }, 900);
 
         return;
@@ -654,7 +654,7 @@
         );
 
         setTimeout(() => {
-          window.location.href = "auth.html";
+          window.location.href = "/auth";
         }, 1000);
 
         return;
@@ -720,7 +720,7 @@
               Continue as Guest
             </button>
 
-            <a href="auth.html" class="signup-btn">
+            <a href="/auth" class="signup-btn">
               Login / Sign Up
             </a>
           `;
@@ -732,7 +732,7 @@
               Continue Guest Chat →
             </button>
 
-            <a href="auth.html" class="secondary-cta">
+            <a href="/auth" class="secondary-cta">
               Login to Unlock All
             </a>
           `;
@@ -744,7 +744,7 @@
               Continue as Guest
             </button>
 
-            <a href="auth.html" class="secondary-cta">
+            <a href="/auth" class="secondary-cta">
               Login / Sign Up
             </a>
           `;

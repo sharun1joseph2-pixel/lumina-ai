@@ -30,7 +30,7 @@
     <span>You can use Chatbot, but Image Studio, Voice Studio, Notes, and saved history require login.</span>
   </div>
 
-  <button type="button" onclick="window.location.href='auth.html'">
+  <button type="button" onclick="window.location.href='/auth'">
     Login / Sign Up
   </button>
 </div>
@@ -75,15 +75,15 @@
           📦 Archive Chats
         </button>
         
-        <button onclick="window.location.href='notes.html'">
+        <button onclick="window.location.href='/notes'">
           ⭐ Notes
         </button>
 
-        <button onclick="window.location.href='downloads.html'">
+        <button onclick="window.location.href='/downloads'">
           ⬇ Downloads
         </button>
 
-        <button class="home-shortcut-btn" onclick="window.location.href='activity.html'">
+        <button class="home-shortcut-btn" onclick="window.location.href='/activity'">
           🕒 Activity
         </button>
         
@@ -187,7 +187,7 @@
   <button
     type="button"
     class="mini-upgrade-btn"
-    onclick="window.location.href='plans.html'"
+    onclick="window.location.href='/plans'"
   >
     Upgrade
   </button>
@@ -506,7 +506,7 @@
 
   </div>
 
-  <button class="launch-btn template-launch-btn" onclick="window.location.href='templates.html'">
+  <button class="launch-btn template-launch-btn" onclick="window.location.href='/templates'">
     🧩 Open Prompt Templates →
   </button>
 </div>
@@ -552,7 +552,7 @@
 
 
 <script>
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let currentProfile = null;
 
@@ -615,7 +615,7 @@ function showToast(message, type = "info") {
 }
 
 function goToLandingPage() {
-  window.location.href = "landing.html";
+  window.location.href = "/landing";
 }
 
 function setButtonLoading(button, isLoading, loadingText = "Loading...") {
@@ -724,7 +724,7 @@ function goToAuth() {
   localStorage.removeItem("username");
   localStorage.removeItem("email");
 
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 /* =========================
@@ -732,7 +732,7 @@ function goToAuth() {
 ========================= */
 
 function openChatbot() {
-  window.location.href = "index.html";
+  window.location.href = "/index";
 }
 
 function openLockedFeature(featureName) {
@@ -742,38 +742,38 @@ function openLockedFeature(featureName) {
   }
 
   if (featureName === "Image Studio") {
-    window.location.href = "image.html";
+    window.location.href = "/image";
     return;
   }
 
   if (featureName === "Voice Studio") {
-    window.location.href = "voice.html";
+    window.location.href = "/voice";
     return;
   }
 
   if (featureName === "Document Studio") {
-    window.location.href = "documents.html";
+    window.location.href = "/documents";
     return;
   }
 }
 function openSettingsPage() {
   closeProfileMenu();
-  window.location.href = "settings.html";
+  window.location.href = "/settings";
 }
 
 function openSearchPage() {
   closeProfileMenu();
-  window.location.href = "search.html";
+  window.location.href = "/search";
 }
 
 function openArchiveChats() {
   closeProfileMenu();
-  window.location.href = "archive.html";
+  window.location.href = "/archive";
 }
 
 function openRulesPage() {
   closeProfileMenu();
-  window.location.href = "rules.html";
+  window.location.href = "/rules";
 }
 
 /* =========================
@@ -788,7 +788,7 @@ async function loadHomeProfile() {
   const user_id = getUserId();
 
   if (!user_id) {
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
     return;
   }
 
@@ -851,7 +851,7 @@ async function openPersonalInfo() {
 
   if (!user_id) {
     showToast("User not logged in.", "warning");
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
     return;
   }
 
@@ -914,7 +914,7 @@ async function savePersonalInfo() {
 
   if (!user_id) {
     showToast("User not logged in.", "warning");
-    window.location.href = "auth.html";
+    window.location.href = "/auth";
     return;
   }
 
@@ -1120,7 +1120,7 @@ function homeSignOut() {
     localStorage.setItem("lumina_theme", savedTheme);
   }
 
-  window.location.href = "auth.html";
+  window.location.href = "/auth";
 }
 
 /* =========================
