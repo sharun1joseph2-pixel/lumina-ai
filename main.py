@@ -515,8 +515,72 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 @app.get("/")
-def home():
+def landing():
     return FileResponse("landing.html")
+
+@app.get("/auth")
+def auth_page():
+    return FileResponse("auth.html")
+
+@app.get("/index")
+def index_page():
+    return FileResponse("index.html")
+
+@app.get("/activity")
+def activity_page():
+    return FileResponse("activity.html")
+
+@app.get("/archive")
+def archive_page():
+    return FileResponse("archive.html")
+
+@app.get("/documents")
+def documents_page():
+    return FileResponse("documents.html")
+
+@app.get("/downloads")
+def downloads_page():
+    return FileResponse("downloads.html")
+
+@app.get("/home")
+def home_page():
+    return FileResponse("home.html")
+
+@app.get("/image")
+def image_page():
+    return FileResponse("image.html")
+
+@app.get("/notes")
+def notes_page():
+    return FileResponse("notes.html")
+
+@app.get("/plans")
+def plans_page():
+    return FileResponse("plans.html")
+
+@app.get("/rules")
+def rules_page():
+    return FileResponse("rules.html")
+
+@app.get("/search")
+def search_page():
+    return FileResponse("search.html")
+
+@app.get("/settings")
+def settings_page():
+    return FileResponse("settings.html")
+
+@app.get("/templates")
+def templates_page():
+    return FileResponse("templates.html")
+
+@app.get("/verify-success")
+def verify_page():
+    return FileResponse("verify-success.html")
+
+@app.get("/voice")
+def voice_page():
+    return FileResponse("voice.html")
 
 @app.get("/debug-routes")
 def debug_routes():
