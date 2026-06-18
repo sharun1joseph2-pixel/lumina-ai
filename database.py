@@ -12,6 +12,9 @@ load_dotenv()
 
 MONGO_URL = os.getenv("MONGO_URL")
 
+if not MONGO_URL:
+    raise Exception("MONGO_URL environment variable is missing")
+
 client = MongoClient(
     MONGO_URL,
     server_api=ServerApi("1"),
