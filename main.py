@@ -95,6 +95,7 @@ os.makedirs(EXPORT_DIR, exist_ok=True)
 gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 app = FastAPI(title="Lumina AI Backend")
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 UPLOAD_DOCUMENTS_DIR = Path.home() / "lumina_storage" / "uploaded_documents"
 UPLOAD_DOCUMENTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -510,13 +511,12 @@ def generate_ai_response(prompt: str) -> str:
 # ROOT / HEALTH
 # =========================
 
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 @app.get("/")
-def root():
-    return {
-        "message": "Lumina AI backend is running",
-        "gemini_model": GEMINI_MODEL,
-        "gemini_key_loaded": bool(GEMINI_API_KEY)
-    }
+def home():
+    return FileResponse("landing.html")
 
 @app.get("/debug-routes")
 def debug_routes():
