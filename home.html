@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Lumina AI Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/static/assets/crop.png">
+  <link rel="icon" type="image/png" href="/static/crop.png">
   <script>
   (function () {
     const savedTheme = localStorage.getItem("lumina_theme") || "dark";
@@ -41,7 +41,7 @@
     <div class="home-brand-block">
       <div class="logo-box">
         <div class="brand-logo">
-  <img src="assets/crop.png" alt="Lumina AI Logo">
+  <img src="/static/crop.png" alt="Lumina AI Logo">
 </div>
 <span>LUMINA AI</span>
       </div>
@@ -615,7 +615,7 @@ function showToast(message, type = "info") {
 }
 
 function goToLandingPage() {
-  window.location.href = "/landing";
+  window.location.href = "/static/landing";
 }
 
 function setButtonLoading(button, isLoading, loadingText = "Loading...") {
